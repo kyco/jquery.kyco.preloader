@@ -25,10 +25,8 @@ Call the preloader like this:
     </script>
 
 
-Configuration
--------------
-
-kycoPreload({ <em>options</em> })
+Configuration - kycoPreload({ <em>options</em> })
+-------------------------------------------------
 
     preloadSelector: true,
 
@@ -93,8 +91,15 @@ Set the duration in milliseconds for the preloader fade out animation.
 Default: function() {}  
 Called once after all images have been loaded and all preloader animations have completed.
 
+Styling
+-------
+
+By default this preloader shows a progress bar. If you wish to use a spinner or something else
+just edit the css file to hide the progress bar (.kyco_progress_bar).  
+I have added a stylesheet so that it is easy to detect which classes are used by the preloader.
+The preloader is quite flexible, all styles can be deleted except for the position attribute of #kyco_preloader.
 
 Support
 -------
 
-For bugs or improvements please contact info@kyco.co.za.
+For bugs or improvements please email me at info@kyco.co.za.
