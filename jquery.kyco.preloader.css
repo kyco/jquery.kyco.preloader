@@ -1,0 +1,20 @@
+/**
+ * jquery.kyco.preloader brought to you by www.kyco.co.za. Copyright 2013 Cornelius Weidmann. Distributed under the GPL.
+ * Go ahead and make your preloader awesome!
+ */
+#kyco_preloader {
+    position:fixed;
+    /**
+     * Do not change position unless you know what you are doing.
+     * The preloader uses this value and also adjusts it when
+     * setting the showInContainer option to true.
+     */
+    top:0; left:0; z-index:10; width:100%; height:100%;
+}
+#kyco_preloader .kyco_loader_overlay {opacity:.1; position:absolute; top:0; left:0; width:100%; height:100%; background:#000;}
+#kyco_preloader .kyco_loader {position:absolute; top:40%; left:25%; width:50%; height:40%;}
+#kyco_preloader .kyco_progress_notification {position:relative; width:100%; text-align:center;}
+#kyco_preloader .kyco_progress_notification pre div {position:relative;}
+#kyco_preloader .kyco_progress_percentage {position:relative; float:none;} /* This rule is only necessary if a global style is applied to all span tags */
+#kyco_preloader .kyco_progress_bar {position:relative; width:100%; height:5px; border-bottom:2px solid #555;}
+#kyco_preloader .kyco_progress_loaded {position:relative; width:0; height:100%; border-bottom:2px solid #fff;}
