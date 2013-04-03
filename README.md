@@ -25,70 +25,72 @@ Call the preloader like this:
     </script>
 
 
-Configuration - kycoPreload({ <em>options</em> })
+Configuration
 -------------
+
+kycoPreload({ <em>options</em> })
 
     preloadSelector: true,
 
-Default: true.
+Default: true  
 If set to true will preload the selector's background image, note that the image will show
 as soon as it is loaded and not only once the preloader is done loading.
 
     truePercentage: true,
 
-Default: true.
+Default: true  
 NOTE: does not work with cross-domain calls.
 If set to true will get the actual (compressed) file size of all the images instead of just looking
 at the number of images loaded divided by the total number of images.
 
     showInContainer: false,
 
-Default: false.
+Default: false  
 If set to true will load the preloader inside the selector element instead of across the whole page.
 
     progressiveReveal: false,
 
-Default: false.
+Default: false  
 If set to true will show images as soon as they are preloaded.
 
     silentMode: false,
 
-Default: false.
+Default: false  
 If set to true will hide the preloader.
 
     debugMode: false,
 
-Default: false.
+Default: false  
 If set to true will show errors.
 
     useOpacity: false,
 
-Default: false.
+Default: false  
 If set to true will use opacity property to hide elements instead of display property.
 
     hidePercentage: false,
 
-Default: false.
+Default: false  
 If set to true will not show the percentage numbers while loading.
 
     loaderText: 'loading images, please wait...',
 
-Default: 'loading images, please wait...'.
+Default: 'loading images, please wait...'  
 Set the text of the loading message.
 
     animateDuration: 0,
 
-Default: 0.
+Default: 0  
 Set the duration in milliseconds for each progress animation.
 
     fadeOutDuration: 100,
 
-Default: 100.
+Default: 100  
 Set the duration in milliseconds for the preloader fade out animation.
 
     onComplete: function() {}
 
-Default: function() {}.
+Default: function() {}  
 Called once after all images have been loaded and all preloader animations have completed.
 
 
