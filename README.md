@@ -25,11 +25,8 @@ Call the preloader like this:
     </script>
 
 
-Configuration
+Configuration - kycoPreload({ <em>options</em> })
 -------------
-
-
-Options, kycoPreload({ <em>options</em> }):
 
     preloadSelector: true,
 
@@ -93,6 +90,7 @@ Set the duration in milliseconds for the preloader fade out animation.
 
 Default: function() {}.
 Called once after all images have been loaded and all preloader animations have completed.
+
 
 Support
 -------
