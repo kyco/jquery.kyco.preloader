@@ -5,7 +5,7 @@
             var defaults = {
                 preloadSelector: true,
                 // default: true
-                // if set to true will preload the selector's background image, note that the image will show 
+                // if set to true will preload the selector's background image, note that the image will show
                 // as soon as it is loaded and not only once the preloader is done loading
                 truePercentage: true,
                 // default: true
@@ -98,7 +98,7 @@
                     }
                 });
 
-                // Get the percentage total of all the images. Once this number is reached 
+                // Get the percentage total of all the images. Once this number is reached
                 // by the preloader the loading is done.
                 if (settings.truePercentage) {
                     var count = 0;
@@ -145,7 +145,7 @@
                         });
                     });
                 } else {
-                    // Get number of total images and use that to calculate percentage relative 
+                    // Get number of total images and use that to calculate percentage relative
                     // to number of images loaded.
                     totalPercentage = totalImages;
                     startPreloading();
@@ -195,11 +195,17 @@
 
                 function updateProgressbar(value) {
                     // Updates the progress bar to the value specified.
-                    // Sometimes truePercentage calculations end up being slighlty less or greater than 100% due to 
+                    // Sometimes truePercentage calculations end up being slighlty less or greater than 100% due to
                     // JavaScript's handling of floating point numbers, so here we make sure the progress is 100%.
                     progressPercentage = value > 99 ? 100 : value;
-                    progressLoaded.stop().animate({'width': progressPercentage + '%'}, settings.animateDuration, 'linear');
-                    progressNotification.children('span').html(Math.floor(progressPercentage));
+                    var totalWidth = progressBar.width();
+                    progressLoaded.stop().animate({'width': progressPercentage + '%'}, {
+                        duration: settings.animateDuration,
+                        easing: 'linear',
+                        progress: function() {
+                            progressNotification.children('span').html(Math.floor((progressLoaded.width() / totalWidth) * 100));
+                        }
+                    });
 
                     // Once done loading show all elements and delete preloader DOM elements.
                     if (imagesLoaded === totalImages) {
