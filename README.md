@@ -1,6 +1,8 @@
 jquery.kyco.preloader
 =====================
 
+This is a simple preloader for preloading images and css backgrounds.
+
 How to install
 --------------
 
