@@ -202,7 +202,7 @@
                     progressLoaded.stop().animate({'width': progressPercentage + '%'}, {
                         duration: settings.animateDuration,
                         easing: 'linear',
-                        progress: function() {
+                        step: function() {
                             progressNotification.children('span').html(Math.floor((progressLoaded.width() / totalWidth) * 100));
                         }
                     });
