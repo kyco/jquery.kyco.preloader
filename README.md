@@ -95,9 +95,9 @@ Styling
 -------
 
 By default this preloader shows a progress bar. If you wish to use a spinner or something else
-just edit the css file to hide the progress bar (.kyco_progress_bar).  
+just edit the css file to hide the progress bar.  
 I have added a stylesheet so that it is easy to detect which classes are used by the preloader.
-The preloader is quite flexible, all styles can be deleted except for the position attribute of #kyco_preloader.
+The preloader is quite flexible, all styles can be deleted except for the ^position^ attribute of ^#kyco_preloader^.
 
 Support
 -------
