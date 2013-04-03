@@ -91,6 +91,7 @@ Set the duration in milliseconds for the preloader fade out animation.
 Default: function() {}  
 Called once after all images have been loaded and all preloader animations have completed.
 
+
 Styling
 -------
 
@@ -98,6 +99,12 @@ By default this preloader shows a progress bar. If you wish to use a spinner or 
 just edit the css file to hide the progress bar. I have added a stylesheet so that it is easy to 
 detect which classes are used by the preloader. The preloader is quite flexible, all styles can 
 be deleted except for the *position* attribute of *#kyco_preloader*.
+
+What's to come
+--------------
+
+Demo files and a function that can be called after each image element has been loaded.
+
 
 Support
 -------
