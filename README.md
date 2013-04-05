@@ -100,6 +100,7 @@ just edit the css file to hide the progress bar. I have added a stylesheet so th
 detect which classes are used by the preloader. The preloader is quite flexible, all styles can 
 be deleted except for the *position* attribute of *#kyco_preloader*.
 
+
 What's to come
 --------------
 
@@ -109,4 +110,4 @@ Demo files and a function that can be called after each image element has been l
 Support
 -------
 
-For bugs or improvements please email me at info@kyco.co.za.
+For bugs or improvements please email info@kyco.co.za.
