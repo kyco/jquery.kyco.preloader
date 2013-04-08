@@ -92,7 +92,7 @@
                 // Get all elements that contain images or background images
                 // to check how many images have to be preloaded.
                 elementChildren.forEach(function(child) {
-                    if (child.is('img') || child.css('backgroundImage') !== 'none') {
+                    if (child.is('img') || child.css('background-image') !== 'none') {
                         // While preloading hide all elements except parent if set to false.
                         if (!(settings.preloadSelector && settings.showInContainer && child === parent)) {
                             if (!settings.useOpacity) {
@@ -184,7 +184,7 @@
                             if (!imgLoadError) {
                                 imgLoadError = true;
                                 if (settings.debugMode) {
-                                    var errorUrl = img.attr('src') ? img.attr('src') : img.css('backgroundImage');
+                                    var errorUrl = img.attr('src') ? img.attr('src') : img.css('background-image');
                                     if (progressNotification.find('pre').length !== 0) {
                                         $('<div>Not found: ' + errorUrl + '</div>').appendTo(progressNotification.find('pre'));
                                     } else {
