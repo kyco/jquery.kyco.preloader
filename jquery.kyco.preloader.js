@@ -15,6 +15,10 @@
                 showInContainer: false,
                 // default: false
                 // if set to true will load the preloader inside the selector element instead of across the whole page
+                hideBackground: false,
+                // default: false
+                // NOTE: hideBackground is an option for when showInContainer is set to true
+                // if set to true will hide the css background-image of the selector element
                 progressiveReveal: false,
                 // default: false
                 // if set to true will show images as soon as they are preloaded
@@ -39,6 +43,14 @@
                 fadeOutDuration: 100,
                 // default: 100
                 // set the duration in milliseconds for the preloader fade out animation
+                showImagesBeforeComplete: true,
+                // default: true
+                // if set to false will wait for the animation of the preloader fade out to complete
+                // before showing the images
+                beforeComplete: function() {},
+                // default: function() {}
+                // called once after all images have been loaded and before the fade out animation of the
+                // preloader triggers
                 onComplete: function() {}
                 // default: function() {}
                 // called once after all images have been loaded and all preloader animations have completed
@@ -88,6 +100,8 @@
                             } else {
                                 child.css('opacity', '0');
                             }
+                        } else if (settings.hideBackground) {
+                            child.attr('data-bg', child.css('background-image')).css('background-image', 'none');
                         }
                         var imageElement = {
                             node: child,
@@ -220,13 +234,25 @@
                             // Once done loading show all elements and delete preloader DOM elements.
                             if (imagesLoaded === totalImages) {
                                 progressLoaded.queue(function() {
-                                    preloadContainer.animate({'opacity':'0'}, settings.fadeOutDuration, function() {
+                                    if (settings.showImagesBeforeComplete) {
                                         imageElements.forEach(function(element) {
                                             revealElement(element.node);
                                         });
-                                        preloadContainer.remove();
-                                        settings.onComplete.call(this);
-                                    });
+                                        settings.beforeComplete.call(this);
+                                        preloadContainer.animate({'opacity':'0'}, settings.fadeOutDuration, function() {
+                                            preloadContainer.remove();
+                                            settings.onComplete.call(this);
+                                        });
+                                    } else {
+                                        settings.beforeComplete.call(this);
+                                        preloadContainer.animate({'opacity':'0'}, settings.fadeOutDuration, function() {
+                                            imageElements.forEach(function(element) {
+                                                revealElement(element.node);
+                                            });
+                                            preloadContainer.remove();
+                                            settings.onComplete.call(this);
+                                        });
+                                    }
                                 });
                             }
                         }
@@ -259,8 +285,10 @@
                 }
 
                 function getImgUrl(image) {
-                    if (image.css('backgroundImage') !== 'none') {
+                    if (image.css('background-image') !== 'none') {
                         return image.css('background-image').replace(/^url\(["']?/, '').replace(/["']?\)$/, '');
+                    } else if (image.css('background-image') === 'none' && image.attr('data-bg')) {
+                        return image.attr('data-bg').replace(/^url\(["']?/, '').replace(/["']?\)$/, '');
                     } else {
                         return image.attr('src');
                     }
@@ -271,6 +299,9 @@
                         element.show();
                     } else {
                         element.css('opacity', '1');
+                    }
+                    if (element.attr('data-bg')) {
+                        element.css('background-image', element.attr('data-bg'));
                     }
                 }
             });

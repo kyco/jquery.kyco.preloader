@@ -36,8 +36,7 @@ as soon as it is loaded and not only once the preloader is done loading.
 
     truePercentage: true,
 
-Default: true  
-NOTE: does not work with cross-domain calls.
+Default: true *(NOTE: does not work with cross-domain calls)*  
 If set to true will get the actual (compressed) file size of all the images instead of just looking
 at the number of images loaded divided by the total number of images.
 
@@ -45,6 +44,12 @@ at the number of images loaded divided by the total number of images.
 
 Default: false  
 If set to true will load the preloader inside the selector element instead of across the whole page.
+
+
+    hideBackground: false,
+
+Default: false *(NOTE: hideBackground is an option for when showInContainer is set to true)*  
+If set to true will hide the css background-image of the selector element.
 
     progressiveReveal: false,
 
@@ -85,6 +90,16 @@ Set the duration in milliseconds for each progress animation.
 
 Default: 100  
 Set the duration in milliseconds for the preloader fade out animation.
+
+    showImagesBeforeComplete: true,
+
+Default: true  
+If set to false will wait for the animation of the preloader fade out to complete before showing the images.
+
+    beforeComplete: function() {},
+
+Default: function() {}  
+Called once after all images have been loaded and before the fade out animation of the preloader triggers.
 
     onComplete: function() {}
 
