@@ -42,14 +42,14 @@
                 // set the duration in milliseconds for each progress animation
                 fadeOutDuration: 100,
                 // default: 100
-                // set the duration in milliseconds for the preloader fade out animation
+                // set the duration in milliseconds for the preloader fadeout animation
                 showImagesBeforeComplete: true,
                 // default: true
-                // if set to false will wait for the animation of the preloader fade out to complete
+                // if set to false will wait for the animation of the preloader fadeout to complete
                 // before showing the images
                 beforeComplete: function() {},
                 // default: function() {}
-                // called once after all images have been loaded and before the fade out animation of the
+                // called once after all images have been loaded and before the fadeout animation of the
                 // preloader triggers
                 onComplete: function() {}
                 // default: function() {}
