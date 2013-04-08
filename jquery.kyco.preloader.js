@@ -186,6 +186,12 @@
                         function calculateCurrentLoadPercentage(element) {
                             if (settings.truePercentage) {
                                 progressPercentage += (element.fileSize / totalPercentage) * 100;
+                                if (imagesLoaded === totalImages) {
+                                    // Sometimes truePercentage calculations end up being slighlty less or greater 
+                                    // than 100% due to JavaScript's handling of floating point numbers, 
+                                    // so here we make sure the progress is 100%.
+                                    progressPercentage = 100;
+                                }
                             } else {
                                 progressPercentage = (imagesLoaded / totalPercentage) * 100;
                             }
@@ -194,32 +200,37 @@
                 }
 
                 function updateProgressbar(value) {
-                    // Updates the progress bar to the value specified.
-                    // Sometimes truePercentage calculations end up being slighlty less or greater than 100% due to
-                    // JavaScript's handling of floating point numbers, so here we make sure the progress is 100%.
-                    progressPercentage = value > 99 ? 100 : value;
+                    // Animates the progress bar and percentage to reflect the value specified.
                     var totalWidth = progressBar.width();
-                    progressLoaded.stop().animate({'width': progressPercentage + '%'}, {
+                    progressLoaded.stop().animate({'width': value + '%'}, {
                         duration: settings.animateDuration,
                         easing: 'linear',
                         step: function() {
-                            progressNotification.children('span').html(Math.floor((progressLoaded.width() / totalWidth) * 100));
+                            // Sets the progress percentage text to the currently animated width.
+                            progressNotification.children('span').html(Math.round((progressLoaded.width() / totalWidth) * 100));
+                        },
+                        complete: function() {
+                            // The "step" function does not always trigger after the animation is done,
+                            // that is why we make sure to always set the value here.
+                            // E.g. we animate width to 100%, but at 99% the "step" function might trigger for the last
+                            // time, which would cause an unwanted result. Also, the lower the animation speed is the 
+                            // less accurate the "step" gets, leading to scenarios where the progress bar's width 
+                            // could be 100% while the text reads something like 87%.
+                            progressNotification.children('span').html(value);
+                            // Once done loading show all elements and delete preloader DOM elements.
+                            if (imagesLoaded === totalImages) {
+                                progressLoaded.queue(function() {
+                                    preloadContainer.animate({'opacity':'0'}, settings.fadeOutDuration, function() {
+                                        imageElements.forEach(function(element) {
+                                            revealElement(element.node);
+                                        });
+                                        preloadContainer.remove();
+                                        settings.onComplete.call(this);
+                                    });
+                                });
+                            }
                         }
                     });
-
-                    // Once done loading show all elements and delete preloader DOM elements.
-                    if (imagesLoaded === totalImages) {
-                        imageElements.forEach(function(element) {
-                            revealElement(element.node);
-                        });
-
-                        progressLoaded.queue(function() {
-                            preloadContainer.animate({'opacity':'0'}, settings.fadeOutDuration, function() {
-                                preloadContainer.remove();
-                                settings.onComplete.call(this);
-                            });
-                        });
-                    }
                 }
 
                 function getAllChildren(selector) {
