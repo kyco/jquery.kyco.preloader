@@ -230,7 +230,7 @@
                             // time, which would cause an unwanted result. Also, the lower the animation speed is the 
                             // less accurate the "step" gets, leading to scenarios where the progress bar's width 
                             // could be 100% while the text reads something like 87%.
-                            progressNotification.children('span').html(value);
+                            progressNotification.children('span').html(Math.round(value));
                             // Once done loading show all elements and delete preloader DOM elements.
                             if (imagesLoaded === totalImages) {
                                 progressLoaded.queue(function() {
