@@ -24,8 +24,8 @@ Call the preloader like this:
         });
     </script>
 
-You can also call the preloader on any element ofcourse, e.g. you only want to preload
-your slider images. You can also customise it quite a bit, e.g.:
+You can also call the preloader on any element of course, e.g. you only want to preload
+your slider images. You can also customise it quite a bit:
 
     <div id="slider">
         <ul>
