@@ -9,18 +9,45 @@ How to install
 
 Download the js file and include it in your head after including jquery:
 
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" />
     <script src="jquery.kyco.preloader.min.js" />
 
 Also include the css file:
 
-    <link rel="stylesheet" type="text/css" href="jquery.kyco.preloader.css" />
+    <link rel="stylesheet" href="jquery.kyco.preloader.css" />
 
 Call the preloader like this:
 
     <script>
         $(document).ready(function() {
             $('body').kycoPreload();
+        });
+    </script>
+
+You can also call the preloader on any element ofcourse, e.g. you only want to preload
+your slider images. You can also customise it quite a bit, e.g.:
+
+    <div id="slider">
+        <ul>
+            <li><img src="slider01.png" /></li>
+            <li style="background:url(slider02.png);"></li>
+        </ul>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#slider').kycoPreload({
+                showInContainer: true,
+                useOpacity: true,
+                animateDuration: 500,
+                fadeOutDuration: 1500,
+                beforeComplete: function() {
+                    console.log('images preloaded, fading out the overlay and loader at 1500ms');
+                },
+                onComplete: function() {
+                    console.log('cool beans!');
+                }
+            });
         });
     </script>
 
