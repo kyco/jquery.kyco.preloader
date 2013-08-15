@@ -89,28 +89,51 @@
                 if (settings.silentMode) {
                     preloadContainer.hide();
                 }
+                // Source: http://stackoverflow.com/questions/833469/regular-expression-for-url
+                function validateURL(textval) {
+                    var urlregex = new RegExp(
+                        "^(http|https|ftp)\://([a-zA-Z0-9\.\-]+(\:[a-zA-Z0-9\.&amp;%\$\-]+)*@)*((25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])|localhost|([a-zA-Z0-9\-]+\.)*[a-zA-Z0-9\-]+\.(com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{2}))(\:[0-9]+)*(/($|[a-zA-Z0-9\.\,\?\'\\\+&amp;%\$#\=~_\-]+))*$");
+                    return urlregex.test(textval);
+                }
+
                 // Get all elements that contain images or background images
                 // to check how many images have to be preloaded.
                 elementChildren.forEach(function(child) {
-                    if (child.is('img') || child.css('background-image') !== 'none') {
-                        // While preloading hide all elements except parent if set to false.
-                        if (!(settings.preloadSelector && settings.showInContainer && child === parent)) {
-                            if (!settings.useOpacity) {
-                                child.hide();
-                            } else {
-                                child.css('opacity', '0');
+
+                    //Showing child.css and his lenght
+                    //console.log( "CHILD: >>" + child.css('background-image') + "<< lenght= " + child.css('background-image').length);
+                    //Removing "url()" from the string
+                    //console.log( "SUBSTRING: >" + child.css('background-image').substring( 4 , child.css('background-image').length -1 ) + "<" );
+                    //and checking if it's a valid url
+                    //console.log( "IS SUBSTRING URL? >" + child.css('background-image').substring( 4 , child.css('background-image').length -1 ) + "< = " + validateURL(child.css('background-image').substring( 4 , child.css('background-image').length -1 )) );
+                    //console.log("-------------------------------");
+
+                    //if (child.is('img') || child.css('background-image') !== 'none') {
+                     
+                        // Check if it's an image or if the background-image is a valid URL (Bootstrap use background-image to apply linear-gradient, for example: btn class, causing 404 ERROR)
+                        if( child.is('img') || validateURL(child.css('background-image').substring( 4 , child.css('background-image').length -1 )) ){
+
+                            // While preloading hide all elements except parent if set to false.
+                            if (!(settings.preloadSelector && settings.showInContainer && child === parent)) {
+                                if (!settings.useOpacity) {
+                                    child.hide();
+                                } else {
+                                    child.css('opacity', '0');
+                                }
+                            } else if (settings.hideBackground) {
+                                child.attr('data-bg', child.css('background-image')).css('background-image', 'none');
                             }
-                        } else if (settings.hideBackground) {
-                            child.attr('data-bg', child.css('background-image')).css('background-image', 'none');
+                            var imageElement = {
+                                node: child,
+                                fileSize: 0
+                            };
+                            imageElements.push(imageElement);
+                            totalImages++;
                         }
-                        var imageElement = {
-                            node: child,
-                            fileSize: 0
-                        };
-                        imageElements.push(imageElement);
-                        totalImages++;
-                    }
-                });
+                        
+                   // }
+
+               });
 
                 // Get the percentage total of all the images. Once this number is reached
                 // by the preloader the loading is done.
