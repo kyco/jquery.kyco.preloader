@@ -4,55 +4,42 @@
         init: function(options) {
             var defaults = {
                 preloadSelector: true,
-                // default: true
                 // if set to true will preload the selector's background image, note that the image will show
                 // as soon as it is loaded and not only once the preloader is done loading
                 truePercentage: true,
-                // default: true
                 // NOTE: does not work with cross-domain calls
                 // if set to true will get the actual (compressed) file size of all the images instead of just looking
                 // at the number of images loaded divided by the total number of images
                 showInContainer: false,
-                // default: false
                 // if set to true will load the preloader inside the selector element instead of across the whole page
                 hideBackground: false,
-                // default: false
                 // NOTE: hideBackground is an option for when showInContainer is set to true
                 // if set to true will hide the css background-image of the selector element
+                hideNonImageElements: false,
+                // if set to true will hide all elements of the selector, not only the images
                 progressiveReveal: false,
-                // default: false
                 // if set to true will show images as soon as they are preloaded
                 silentMode: false,
-                // default: false
                 // if set to true will hide the preloader
                 debugMode: false,
-                // default: false
                 // if set to true will show errors
                 useOpacity: false,
-                // default: false
                 // if set to true will use opacity property to hide elements instead of display property
                 hidePercentage: false,
-                // default: false
                 // if set to true will not show the percentage numbers while loading
                 loaderText: 'loading images, please wait...',
-                // default: 'loading images, please wait...'
                 // set the text of the loading message
                 animateDuration: 0,
-                // default: 0
                 // set the duration in milliseconds for each progress animation
                 fadeOutDuration: 100,
-                // default: 100
                 // set the duration in milliseconds for the preloader fadeout animation
                 showImagesBeforeComplete: true,
-                // default: true
                 // if set to false will wait for the animation of the preloader fadeout to complete
                 // before showing the images
                 beforeComplete: function() {},
-                // default: function() {}
                 // called once after all images have been loaded and before the fadeout animation of the
                 // preloader triggers
                 onComplete: function() {}
-                // default: function() {}
                 // called once after all images have been loaded and all preloader animations have completed
             };
 
@@ -62,6 +49,7 @@
                 var parent = $(this);
                 var elementChildren = getAllChildren(parent);
                 var imageElements = [];
+                var nonImageElements = [];
                 var imagesLoaded = 0;
                 var totalImages = 0;
                 var progressPercentage = 0;
@@ -109,6 +97,13 @@
                         };
                         imageElements.push(imageElement);
                         totalImages++;
+                    } else if (settings.hideNonImageElements) {
+                        if (!settings.useOpacity) {
+                            child.hide();
+                        } else {
+                            child.css('opacity', '0');
+                        }
+                        nonImageElements.push(child);
                     }
                 });
 
@@ -242,6 +237,9 @@
                                         imageElements.forEach(function(element) {
                                             revealElement(element.node);
                                         });
+                                        nonImageElements.forEach(function(element) {
+                                            revealElement(element);
+                                        });
                                         settings.beforeComplete.call(this);
                                         preloadContainer.animate({'opacity':'0'}, settings.fadeOutDuration, function() {
                                             preloadContainer.remove();
@@ -252,6 +250,9 @@
                                         preloadContainer.animate({'opacity':'0'}, settings.fadeOutDuration, function() {
                                             imageElements.forEach(function(element) {
                                                 revealElement(element.node);
+                                            });
+                                            nonImageElements.forEach(function(element) {
+                                                revealElement(element);
                                             });
                                             preloadContainer.remove();
                                             settings.onComplete.call(this);
