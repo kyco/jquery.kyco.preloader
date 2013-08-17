@@ -41,6 +41,19 @@ your slider images. You can also customise it quite a bit:
                 useOpacity: true,
                 animateDuration: 500,
                 fadeOutDuration: 1500,
+                afterEach: function() {
+                    var timestamp = new Date();
+                    var hours = timestamp.getHours();
+                    var minutes = timestamp.getMinutes();
+                    var seconds = timestamp.getSeconds();
+                    var milliseconds = timestamp.getMilliseconds();
+                    while ((hours + '').length < 2) { hours = '0' + hours; }
+                    while ((minutes + '').length < 2) { minutes = '0' + minutes; }
+                    while ((seconds + '').length < 2) { seconds = '0' + seconds; }
+                    while ((milliseconds + '').length < 3) { milliseconds = '0' + milliseconds; }
+                    
+                    console.log(hours + ':' + minutes + ':' + seconds + '.' + milliseconds, this);
+                },
                 beforeComplete: function() {
                     console.log('images preloaded, fading out the overlay and loader at 1500ms');
                 },
@@ -136,7 +149,7 @@ be deleted except for the *position* attribute of *#kyco_preloader*.
 What's to come
 --------------
 
-Demo files and a function that can be called after each image element has been loaded.
+Demo files.
 
 
 Support

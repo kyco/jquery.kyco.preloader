@@ -18,6 +18,8 @@
                 hideNonImageElements: false,
                 // if set to true will hide all elements of the selector, not only the images
                 progressiveReveal: false,
+                // NOTE: if hideNonImageElements is set to true then progessiveReveal might not
+                // return the expected result because the image element's parent might be hidden
                 // if set to true will show images as soon as they are preloaded
                 silentMode: false,
                 // if set to true will hide the preloader
@@ -36,6 +38,8 @@
                 showImagesBeforeComplete: true,
                 // if set to false will wait for the animation of the preloader fadeout to complete
                 // before showing the images
+                afterEach: function() {},
+                // called once for every image element after it has been preloaded
                 beforeComplete: function() {},
                 // called once after all images have been loaded and before the fadeout animation of the
                 // preloader triggers
@@ -174,6 +178,7 @@
                             if (settings.progressiveReveal) {
                                 revealElement(element.node);
                             }
+                            settings.afterEach.call(element.node);
                         }).error(function() {
                             // Ignore failed image loads but notify user with a console message.
                             if (!imgLoadError) {
