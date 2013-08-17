@@ -215,12 +215,16 @@
 
                 function updateProgressbar(value) {
                     // Animates the progress bar and percentage to reflect the value specified.
-                    var totalWidth = progressBar.width();
+                    var totalWidth;
                     progressLoaded.stop().animate({'width': value + '%'}, {
                         duration: settings.animateDuration,
                         easing: 'linear',
                         step: function() {
-                            // Sets the progress percentage text to the currently animated width.
+                            // Update totalWidth on each step rather than at top of function to ensure 
+                            // that the loading percentage is correct for the odd case when the
+                            // browser window gets resized during loading
+                            totalWidth = progressBar.width(); 
+                            // Set the progress percentage text to the currently animated width.
                             progressNotification.children('span').html(Math.round((progressLoaded.width() / totalWidth) * 100));
                         },
                         complete: function() {
