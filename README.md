@@ -75,7 +75,7 @@ as soon as it is loaded and not only once the preloader is done loading.
 
     truePercentage: true,
 
-*(NOTE: does not work with cross-domain calls)*  
+*Note: does not work with cross-domain calls*  
 If set to true will get the actual (compressed) file size of all the images instead of just looking
 at the number of images loaded divided by the total number of images.
 
@@ -85,7 +85,7 @@ If set to true will load the preloader inside the selector element instead of ac
 
     hideBackground: false,
 
-*(NOTE: hideBackground is an option for when showInContainer is set to true)*  
+*Note: hideBackground is an option for when showInContainer is set to true*  
 If set to true will hide the css background-image of the selector element.
 
     hideNonImageElements: false,
@@ -94,6 +94,8 @@ If set to true will hide all elements of the selector, not only the images.
 
     progressiveReveal: false,
 
+*Note: if hideNonImageElements is set to true then progessiveReveal might not return 
+the expected result because the image element's parent might be hidden*  
 If set to true will show images as soon as they are preloaded.
 
     silentMode: false,
