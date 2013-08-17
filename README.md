@@ -130,6 +130,10 @@ Set the duration in milliseconds for the preloader fadeout animation.
 
 If set to false will wait for the animation of the preloader fadeout to complete before showing the images.
 
+    afterEach: function() {},
+
+Called once after every image load.
+
     beforeComplete: function() {},
 
 Called once after all images have been loaded and before the fadeout animation of the preloader triggers.
@@ -148,13 +152,7 @@ detect which classes are used by the preloader. The preloader is quite flexible,
 be deleted except for the *position* attribute of *#kyco_preloader*.
 
 
-What's to come
---------------
-
-Demo files.
-
-
 Support
 -------
 
-For bugs or improvements please email info@kyco.co.za.
+For bugs or improvements please use the issues tab or email info@kyco.co.za.
