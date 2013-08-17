@@ -81,6 +81,7 @@
                 if (settings.silentMode) {
                     preloadContainer.hide();
                 }
+
                 // Get all elements that contain images or background images
                 // to check how many images have to be preloaded.
                 elementChildren.forEach(function(child) {
@@ -319,6 +320,18 @@
     };
 
     $.fn.kycoPreload = function(method) {
+        // Check if browser supports Array.forEach() method, if it doesn't mimic that functionality,
+        // implementation from here: http://stackoverflow.com/questions/2790001/fixing-javascript-array-functions-in-internet-explorer-indexof-foreach-etc
+        if (!('forEach' in Array.prototype)) {
+            Array.prototype.forEach = function(action, that /*opt*/) {
+                for (var i = 0, n = this.length; i < n; i++) {
+                    if (i in this) {
+                        action.call(that, this[i], i, this);
+                    }
+                }
+            };
+        }
+
         if (methods[method]) {
             return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
         } else if (typeof method === 'object' || !method) {
