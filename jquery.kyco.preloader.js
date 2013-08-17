@@ -4,14 +4,15 @@
         init: function(options) {
             var defaults = {
                 preloadSelector: true,
-                // if set to true will preload the selector's background image, note that the image will show
-                // as soon as it is loaded and not only once the preloader is done loading
+                // if set to true will preload the selector's background image, note that the image
+                // will show as soon as it is loaded and not only once the preloader is done loading
                 truePercentage: true,
                 // NOTE: does not work with cross-domain calls
-                // if set to true will get the actual (compressed) file size of all the images instead of just looking
-                // at the number of images loaded divided by the total number of images
+                // if set to true will get the actual (compressed) file size of all the images instead of
+                // just looking at the number of images loaded divided by the total number of images
                 showInContainer: false,
-                // if set to true will load the preloader inside the selector element instead of across the whole page
+                // if set to true will load the preloader inside the selector element instead of
+                // across the whole page
                 hideBackground: false,
                 // NOTE: hideBackground is an option for when showInContainer is set to true
                 // if set to true will hide the css background-image of the selector element
@@ -39,7 +40,7 @@
                 // if set to false will wait for the animation of the preloader fadeout to complete
                 // before showing the images
                 afterEach: function() {},
-                // called once for every image element after it has been preloaded
+                // called once after every image load
                 beforeComplete: function() {},
                 // called once after all images have been loaded and before the fadeout animation of the
                 // preloader triggers
