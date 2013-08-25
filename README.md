@@ -9,12 +9,12 @@ How to install
 
 Download the js file and include it in your head after including jquery:
 
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" />
-    <script src="jquery.kyco.preloader.min.js" />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="jquery.kyco.preloader.min.js"></script>
 
 Also include the css file:
 
-    <link rel="stylesheet" href="jquery.kyco.preloader.css" />
+    <link rel="stylesheet" href="jquery.kyco.preloader.css">
 
 Call the preloader like this:
 

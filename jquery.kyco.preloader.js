@@ -1,4 +1,11 @@
-// jquery.kyco.preloader brought to you by www.kyco.co.za. Copyright 2013 Cornelius Weidmann. Distributed under the GPL.
+/**
+ * jquery.kyco.preloader
+ * v1.0.0
+ *
+ * Brought to you by http://www.kyco.co.za
+ * Copyright 2013 Cornelius Weidmann
+ * Distributed under the GPL
+ */
 (function($) {
     var methods = {
         init: function(options) {
