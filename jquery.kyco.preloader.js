@@ -1,60 +1,67 @@
-/**
- * jquery.kyco.preloader
- * v1.0.0
- *
- * Brought to you by http://www.kyco.co.za
- * Copyright 2013 Cornelius Weidmann
- * Distributed under the GPL
- */
+/*********************************************\
+
+    jquery.kyco.preloader
+    v1.1.0
+
+    Brought to you by http://www.kyco.co.za
+    Copyright 2013 Cornelius Weidmann
+
+    Distributed under the GPL
+
+\*********************************************/
+
 (function($) {
+    var defaults = {
+        preloadSelector: true,
+        // if set to true will preload the selector's background image, note that the image
+        // will show as soon as it is loaded and not only once the preloader is done loading
+        truePercentage: true,
+        // NOTE: does not work with cross-domain calls
+        // if set to true will get the actual (compressed) file size of all the images instead of
+        // just looking at the number of images loaded divided by the total number of images
+        showInContainer: false,
+        // if set to true will load the preloader inside the selector element instead of
+        // across the whole page
+        hideBackground: false,
+        // NOTE: hideBackground is an option for when showInContainer is set to true
+        // if set to true will hide the css background-image of the selector element
+        hideNonImageElements: false,
+        // if set to true will hide all elements of the selector, not only the images
+        progressiveReveal: false,
+        // NOTE: if hideNonImageElements is set to true then progessiveReveal might not
+        // return the expected result because the image element's parent might be hidden
+        // if set to true will show images as soon as they are preloaded
+        forceSequentialLoad: false,
+        // Will force images to load in the order they appear in the DOM, this can potentially
+        // increase the load time because images wont start loading in parallel
+        silentMode: false,
+        // if set to true will hide the preloader
+        debugMode: false,
+        // if set to true will show errors
+        useOpacity: false,
+        // if set to true will use opacity property to hide elements instead of display property
+        hidePercentage: false,
+        // if set to true will not show the percentage numbers while loading
+        loaderText: 'loading images, please wait...',
+        // set the text of the loading message
+        animateDuration: 0,
+        // set the duration in milliseconds for each progress animation
+        fadeOutDuration: 100,
+        // set the duration in milliseconds for the preloader fadeout animation
+        showImagesBeforeComplete: true,
+        // if set to false will wait for the animation of the preloader fadeout to complete
+        // before showing the images
+        afterEach: function() {},
+        // called once after every image load
+        beforeComplete: function() {},
+        // called once after all images have been loaded and before the fadeout animation of the
+        // preloader triggers
+        onComplete: function() {}
+        // called once after all images have been loaded and all preloader animations have completed
+    };
+
     var methods = {
         init: function(options) {
-            var defaults = {
-                preloadSelector: true,
-                // if set to true will preload the selector's background image, note that the image
-                // will show as soon as it is loaded and not only once the preloader is done loading
-                truePercentage: true,
-                // NOTE: does not work with cross-domain calls
-                // if set to true will get the actual (compressed) file size of all the images instead of
-                // just looking at the number of images loaded divided by the total number of images
-                showInContainer: false,
-                // if set to true will load the preloader inside the selector element instead of
-                // across the whole page
-                hideBackground: false,
-                // NOTE: hideBackground is an option for when showInContainer is set to true
-                // if set to true will hide the css background-image of the selector element
-                hideNonImageElements: false,
-                // if set to true will hide all elements of the selector, not only the images
-                progressiveReveal: false,
-                // NOTE: if hideNonImageElements is set to true then progessiveReveal might not
-                // return the expected result because the image element's parent might be hidden
-                // if set to true will show images as soon as they are preloaded
-                silentMode: false,
-                // if set to true will hide the preloader
-                debugMode: false,
-                // if set to true will show errors
-                useOpacity: false,
-                // if set to true will use opacity property to hide elements instead of display property
-                hidePercentage: false,
-                // if set to true will not show the percentage numbers while loading
-                loaderText: 'loading images, please wait...',
-                // set the text of the loading message
-                animateDuration: 0,
-                // set the duration in milliseconds for each progress animation
-                fadeOutDuration: 100,
-                // set the duration in milliseconds for the preloader fadeout animation
-                showImagesBeforeComplete: true,
-                // if set to false will wait for the animation of the preloader fadeout to complete
-                // before showing the images
-                afterEach: function() {},
-                // called once after every image load
-                beforeComplete: function() {},
-                // called once after all images have been loaded and before the fadeout animation of the
-                // preloader triggers
-                onComplete: function() {}
-                // called once after all images have been loaded and all preloader animations have completed
-            };
-
             var settings = $.extend({}, defaults, options);
 
             return this.each(function() {
@@ -66,6 +73,7 @@
                 var totalImages = 0;
                 var progressPercentage = 0;
                 var totalPercentage = 0;
+                var count = 0;
 
                 // Create preloader DOM elements.
                 var preloadContainer = $('<div id="kyco_preloader"></div>');
@@ -123,48 +131,37 @@
                 // Get the percentage total of all the images. Once this number is reached
                 // by the preloader the loading is done.
                 if (settings.truePercentage) {
-                    var count = 0;
                     // Get the Content-Length attribute as rough estimate of the actual file size.
                     // Use this to get the total file size of all images and calculate percentage relative to it.
                     imageElements.forEach(function(element) {
                         $.ajax({
                             type: 'HEAD',
-                            url: getImgUrl(element.node),
+                            url: getImageUrl(element.node),
                             success: function(response, message, object) {
                                 element.fileSize = parseInt(object.getResponseHeader('Content-Length'));
-                                totalPercentage += parseInt(object.getResponseHeader('Content-Length'));
-                                count++;
-                                if (count === totalImages) {
-                                    startPreloading();
-                                }
+                                totalPercentage += element.fileSize;
+                                continueCounting();
                             },
                             error: function(object, response, message) {
-                                if (settings.debugMode) {
-                                    if (object.status === 404) {
-                                        if (progressNotification.find('pre').length !== 0) {
-                                            $('<div>Not found: ' + getImgUrl(element.node) + '</div>').appendTo(progressNotification.find('pre'));
-                                        } else {
-                                            progressNotification.html('Failed loading images:<pre><div>Not found: ' + getImgUrl(element.node) + '</div></pre>');
-                                        }
-                                    } else if (object.status === 0) {
-                                        if (progressNotification.find('pre').length !== 0) {
-                                            $('<div>Invalid cross-domain call: ' + getImgUrl(element.node) + '</div>').appendTo(progressNotification.find('pre'));
-                                        } else {
-                                            progressNotification.html('Failed loading images:<pre><div>Invalid cross-domain call: ' + getImgUrl(element.node) + '</div></pre>');
-                                        }
-                                    } else {
-                                        if (progressNotification.find('pre').length !== 0) {
-                                            $('<div>Couldn\'t get file size, set {truePercentage: false}</div>').appendTo(progressNotification.find('pre'));
-                                        } else {
-                                            progressNotification.html('Failed loading images:<pre><div>Couldn\'t get file size, set {truePercentage: false}</div></pre>');
-                                        }
-                                    }
-                                    progressNotification.css('text-align', 'left');
-                                } else {
-                                    progressNotification.html('failed loading one or more images... please refresh the page');
-                                }
+                                // Ignore errors, they will be handled later. Show a message to notify.
+                                continueCounting();
+                                progressNotification.addClass('error').html('\
+                                    Your images were not preloaded!<br>\
+                                    Possible errors: Loader failed getting image sizes.<br>\
+                                    Make sure you load images from the same domain \
+                                    or set truePercentage to false.\
+                                ');
+                                progressBar.addClass('error');
+                                settings.fadeOutDuration = 50000;
                             }
                         });
+
+                        function continueCounting() {
+                            count++;
+                            if (count === totalImages) {
+                                startPreloading();
+                            }
+                        }
                     });
                 } else {
                     // Get number of total images and use that to calculate percentage relative
@@ -177,49 +174,71 @@
                     // Get the url of the image or the css background image. Create a DOM image element which
                     // holds the image (preloads it) and triggers a progressbar update on successful load.
                     // Show all images or elements with background images only once all images have been preloaded.
-                    imageElements.forEach(function(element) {
-                        var img = $('<img src="' + getImgUrl(element.node) + '" />');
-                        var imgLoadError = false; // Hack for Firefox: Firefox triggers the img.error() function twice.
-                        img.load(function() {
-                            imagesLoaded++;
-                            calculateCurrentLoadPercentage(element);
-                            updateProgressbar(progressPercentage);
-                            if (settings.progressiveReveal) {
-                                revealElement(element.node);
-                            }
-                            settings.afterEach.call(element.node);
-                        }).error(function() {
-                            // Ignore failed image loads but notify user with a console message.
-                            if (!imgLoadError) {
-                                imgLoadError = true;
-                                if (settings.debugMode) {
-                                    var errorUrl = img.attr('src') ? img.attr('src') : img.css('background-image');
-                                    if (progressNotification.find('pre').length !== 0) {
-                                        $('<div>Not found: ' + errorUrl + '</div>').appendTo(progressNotification.find('pre'));
-                                    } else {
-                                        progressNotification.html('Failed loading images:<pre><div>Not found: ' + errorUrl + '</div></pre>');
-                                    }
-                                    progressNotification.css('text-align', 'left');
-                                } else {
-                                    progressNotification.html('failed loading one or more images... please refresh the page');
-                                }
-                            }
-                        });
+                    if (!settings.forceSequentialLoad) {
+                        imageElements.forEach(function(element) {
+                            var img = $('<img>').attr('src', getImageUrl(element.node));
 
-                        function calculateCurrentLoadPercentage(element) {
-                            if (settings.truePercentage) {
-                                progressPercentage += (element.fileSize / totalPercentage) * 100;
-                                if (imagesLoaded === totalImages) {
-                                    // Sometimes truePercentage calculations end up being slighlty less or greater 
-                                    // than 100% due to JavaScript's handling of floating point numbers, 
-                                    // so here we make sure the progress is 100%.
-                                    progressPercentage = 100;
+                            img.load(function() {
+                                updateLoader(element);
+                            }).error(function() {
+                                updateLoader(element);
+                                handleLoadingError(img, element);
+                            });
+                        });
+                    } else {
+                        (function loadImage(index) {
+                            var currentElement = imageElements[index];
+                            var img = $('<img>').attr('src', getImageUrl(currentElement.node));
+
+                            img.load(function() {
+                                updateLoader(currentElement);
+                                if (++index < imageElements.length) {
+                                    loadImage(index);
                                 }
-                            } else {
-                                progressPercentage = (imagesLoaded / totalPercentage) * 100;
-                            }
+                            }).error(function() {
+                                // Ignore failed image loads but add an error class to the image
+                                // and notify user with a console message if in debug mode.
+                                updateLoader(currentElement);
+                                if (++index < imageElements.length) {
+                                    loadImage(index);
+                                }
+                                handleLoadingError(img, currentElement);
+                            });
+                        })(0);
+                    }
+                }
+
+                function handleLoadingError(image, element) {
+                    element.node.addClass('kyco_preloader_not_found_error');
+
+                    if (settings.debugMode) {
+                        var errorUrl = image.attr('src') ? image.attr('src') : image.css('background-image');
+                        console.log('Failed loading ' + errorUrl);
+                    }
+                }
+
+                function updateLoader(element) {
+                    imagesLoaded++;
+                    calculateCurrentLoadPercentage(element);
+                    updateProgressbar(progressPercentage);
+                    if (settings.progressiveReveal) {
+                        revealElement(element.node);
+                    }
+                    settings.afterEach.call(element.node);
+                }
+
+                function calculateCurrentLoadPercentage(element) {
+                    if (settings.truePercentage) {
+                        progressPercentage += (element.fileSize / totalPercentage) * 100;
+                        if (imagesLoaded === totalImages) {
+                            // Sometimes truePercentage calculations end up being slighlty less or greater 
+                            // than 100% due to JavaScript's handling of floating point numbers, 
+                            // so here we make sure the progress is 100%.
+                            progressPercentage = 100;
                         }
-                    });
+                    } else {
+                        progressPercentage = (imagesLoaded / totalPercentage) * 100;
+                    }
                 }
 
                 function updateProgressbar(value) {
@@ -288,6 +307,7 @@
                     } else if (settings.preloadSelector) {
                         selectorChildren.push(selector);
                     }
+
                     function getChildren(element) {
                         var children = element.children();
                         if (children.length > 0) {
@@ -300,10 +320,11 @@
                             });
                         }
                     }
+
                     return selectorChildren;
                 }
 
-                function getImgUrl(image) {
+                function getImageUrl(image) {
                     if (image.css('background-image') !== 'none') {
                         return image.css('background-image').replace(/^url\(["']?/, '').replace(/["']?\)$/, '');
                     } else if (image.css('background-image') === 'none' && image.attr('data-bg')) {
@@ -327,19 +348,19 @@
         }
     };
 
-    $.fn.kycoPreload = function(method) {
-        // Check if browser supports Array.forEach() method, if it doesn't mimic that functionality,
-        // implementation from here: http://stackoverflow.com/questions/2790001/fixing-javascript-array-functions-in-internet-explorer-indexof-foreach-etc
-        if (!('forEach' in Array.prototype)) {
-            Array.prototype.forEach = function(action, that /*opt*/) {
-                for (var i = 0, n = this.length; i < n; i++) {
-                    if (i in this) {
-                        action.call(that, this[i], i, this);
-                    }
+    // Check if browser supports Array.forEach() method, if it doesn't mimic that functionality,
+    // implementation from here: http://stackoverflow.com/questions/2790001/fixing-javascript-array-functions-in-internet-explorer-indexof-foreach-etc
+    if (!('forEach' in Array.prototype)) {
+        Array.prototype.forEach = function(action, that /*opt*/) {
+            for (var i = 0, n = this.length; i < n; i++) {
+                if (i in this) {
+                    action.call(that, this[i], i, this);
                 }
-            };
-        }
+            }
+        };
+    }
 
+    $.fn.kycoPreload = function(method) {
         if (methods[method]) {
             return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
         } else if (typeof method === 'object' || !method) {
