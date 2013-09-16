@@ -101,7 +101,7 @@ If set to true will show images as soon as they are preloaded.
 	forceSequentialLoad: false,
 
 Will force images to load in the order they appear in the DOM, this can potentially
-increase the load time because images won't start loading in parallel
+increase the load time because images won't start loading in parallel.
 
 	silentMode: false,
 
