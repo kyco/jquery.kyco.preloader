@@ -1,7 +1,7 @@
 /*********************************************\
 
 	jquery.kyco.preloader
-	v1.1.0
+	v1.1.1
 
 	Brought to you by http://www.kyco.co.za
 	Copyright 2013 Cornelius Weidmann
@@ -74,6 +74,7 @@
 				var progressPercentage = 0;
 				var totalPercentage = 0;
 				var count = 0;
+				var trickleSpeed = 3000; // 3s, only used initially
 
 				// Create preloader DOM elements.
 				var preloadContainer = $('<div id="kyco_preloader"></div>');
@@ -96,6 +97,11 @@
 
 				if (settings.silentMode) {
 					preloadContainer.hide();
+				}
+
+				// Start animating progress bar to indicate activity
+				if (settings.truePercentage) {
+					updateProgressbar(1, trickleSpeed);
 				}
 
 				// Get all elements that contain images or background images
@@ -146,19 +152,25 @@
 								// Ignore errors, they will be handled later. Show a message to notify.
 								continueCounting();
 								progressNotification.addClass('error').html('\
-									Your images were not preloaded!<br>\
-									Possible errors: Loader failed getting image sizes.<br>\
-									Make sure you load images from the same domain \
-									or set truePercentage to false.\
+									Not all of your images were preloaded!<br>\
+									Loader failed getting image sizes.<br><br>\
+									1. Make sure your images exists.<br>\
+									2. Make sure your image paths/urls are correct.<br>\
+									3. If you load images from a romote domain set truePercentage to false.<br><br>\
+									<button>Close</button>\
 								');
 								progressBar.addClass('error');
-								settings.fadeOutDuration = 50000;
+								settings.fadeOutDuration = 500000;
+								$('button').click(function() {
+									preloadContainer.remove();
+								});
 							}
 						});
 
 						function continueCounting() {
 							count++;
 							if (count === totalImages) {
+								updateTrickleSpeed();
 								startPreloading();
 							}
 						}
@@ -168,6 +180,29 @@
 					// to number of images loaded.
 					totalPercentage = totalImages;
 					startPreloading();
+				}
+
+				function updateTrickleSpeed(counter) {
+					// Will overwirte the initial trickle speed with one based on the file size
+					// of the image, does not work if truePercentage is set to false.
+					counter = counter !== undefined ? counter : 0;
+
+					var totalFileSize = 0;
+					var elementRelativeSize = 0;
+					var trickleTo = 0;
+
+					imageElements.forEach(function(element) {
+						totalFileSize += element.fileSize;
+					});
+
+					for (var z = 0; z <= counter; z++) {
+						elementRelativeSize += imageElements[z].fileSize / totalFileSize * 100;
+					}
+
+					trickleTo = elementRelativeSize;
+					trickleSpeed = elementRelativeSize * 1000; // 1s for each percentage
+
+					updateProgressbar(trickleTo, trickleSpeed);
 				}
 
 				function startPreloading() {
@@ -241,11 +276,12 @@
 					}
 				}
 
-				function updateProgressbar(value) {
+				function updateProgressbar(value, updateDuration) {
 					// Animates the progress bar and percentage to reflect the value specified.
+					updateDuration = updateDuration !== undefined ? updateDuration : settings.animateDuration;
 					var totalWidth;
 					progressLoaded.stop().animate({'width': value + '%'}, {
-						duration: settings.animateDuration,
+						duration: updateDuration,
 						easing: 'linear',
 						step: function() {
 							// Update totalWidth on each step rather than at top of function to ensure 
@@ -265,7 +301,7 @@
 							progressNotification.children('span').html(Math.round(value));
 							// Once done loading show all elements and delete preloader DOM elements.
 							if (imagesLoaded === totalImages) {
-								progressLoaded.queue(function() {
+								progressLoaded.delay(100).queue(function() {
 									if (settings.showImagesBeforeComplete) {
 										imageElements.forEach(function(element) {
 											revealElement(element.node);
@@ -292,6 +328,8 @@
 										});
 									}
 								});
+							} else if (settings.truePercentage) {
+								updateTrickleSpeed(imagesLoaded + 1);
 							}
 						}
 					});
