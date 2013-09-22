@@ -265,6 +265,12 @@
 							console.groupEnd();
 						}
 
+						// Ensure that we do not trickle to 100%, we need the loader to get there first, otherwise
+						// we might have to wait at 100% which is not an ideal user experience
+						if (trickleTo === 100) {
+							trickleTo = 99;
+						}
+
 						updateProgressbar(trickleTo, trickleSpeed);
 					}
 				}
