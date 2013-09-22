@@ -64,12 +64,6 @@
 		init: function(options) {
 			var settings = $.extend({}, defaults, options);
 
-			if (settings.debugMode) {
-				var startTime = (new Date).getTime();
-				console.groupCollapsed('kycoPreload');
-				console.log((((new Date).getTime() - startTime) / 1000).toFixed(3) + ': init()');
-			}
-
 			return this.each(function() {
 				var parent = $(this);
 				var elementChildren = getAllChildren(parent);
@@ -82,10 +76,6 @@
 				var count = 0;
 				var trickleSpeed = 3000; // 3s, only used initially
 				var trickleCounters = []; // used to prevent multiple trickles for the same element 
-
-				if (settings.debugMode) {
-					console.log((((new Date).getTime() - startTime) / 1000).toFixed(3) + ': creating DOM elements...');
-				}
 
 				// Create preloader DOM elements.
 				var preloadContainer = $('<div id="kyco_preloader"></div>');
@@ -110,16 +100,14 @@
 					preloadContainer.hide();
 				}
 
-				if (settings.debugMode) {
-					console.log((((new Date).getTime() - startTime) / 1000).toFixed(3) + ': creating DOM elements DONE');
-				}
-
 				// Start animating progress bar to indicate activity
 				if (settings.truePercentage) {
 					updateProgressbar(1, trickleSpeed);
 				}
 
 				if (settings.debugMode) {
+					var startTime = (new Date).getTime();
+					console.groupCollapsed('kycoPreload > ', parent);
 					console.log((((new Date).getTime() - startTime) / 1000).toFixed(3) + ': scanning DOM for image elements...');
 					console.groupCollapsed('image elements');
 				}
