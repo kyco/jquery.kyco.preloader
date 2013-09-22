@@ -1,7 +1,7 @@
 /*********************************************\
 
 	jquery.kyco.preloader
-	v1.1.3
+	v1.1.4
 
 	Brought to you by http://www.kyco.co.za
 	Copyright 2013 Cornelius Weidmann
@@ -11,10 +11,6 @@
 \*********************************************/
 
 (function($) {
-	var startTime = (new Date).getTime();
-	console.groupCollapsed('kycoPreload (minified version does not show log messages)');
-	console.log((((new Date).getTime() - startTime) / 1000).toFixed(3) + ': setting default variables and methods...'); 
-
 	var defaults = {
 		preloadSelector: true,
 		// if set to true will preload the selector's background image, note that the image
@@ -66,9 +62,13 @@
 
 	var methods = {
 		init: function(options) {
-			console.log((((new Date).getTime() - startTime) / 1000).toFixed(3) + ': init()');
-
 			var settings = $.extend({}, defaults, options);
+
+			if (settings.debugMode) {
+				var startTime = (new Date).getTime();
+				console.groupCollapsed('kycoPreload');
+				console.log((((new Date).getTime() - startTime) / 1000).toFixed(3) + ': init()');
+			}
 
 			return this.each(function() {
 				var parent = $(this);
@@ -83,7 +83,9 @@
 				var trickleSpeed = 3000; // 3s, only used initially
 				var trickleCounters = []; // used to prevent multiple trickles for the same element 
 
-				console.log((((new Date).getTime() - startTime) / 1000).toFixed(3) + ': creating DOM elements...');
+				if (settings.debugMode) {
+					console.log((((new Date).getTime() - startTime) / 1000).toFixed(3) + ': creating DOM elements...');
+				}
 
 				// Create preloader DOM elements.
 				var preloadContainer = $('<div id="kyco_preloader"></div>');
@@ -108,15 +110,19 @@
 					preloadContainer.hide();
 				}
 
-				console.log((((new Date).getTime() - startTime) / 1000).toFixed(3) + ': creating DOM elements DONE');
+				if (settings.debugMode) {
+					console.log((((new Date).getTime() - startTime) / 1000).toFixed(3) + ': creating DOM elements DONE');
+				}
 
 				// Start animating progress bar to indicate activity
 				if (settings.truePercentage) {
 					updateProgressbar(1, trickleSpeed);
 				}
 
-				console.log((((new Date).getTime() - startTime) / 1000).toFixed(3) + ': scanning DOM for image elements...');
-				console.groupCollapsed('image elements');
+				if (settings.debugMode) {
+					console.log((((new Date).getTime() - startTime) / 1000).toFixed(3) + ': scanning DOM for image elements...');
+					console.groupCollapsed('image elements');
+				}
 
 				// Get all elements that contain images or background images
 				// to check how many images have to be preloaded.
@@ -137,7 +143,9 @@
 							fileSize: 0
 						};
 
-						console.log(imageElement.node);
+						if (settings.debugMode) {
+							console.log(imageElement.node);
+						}
 
 						imageElements.push(imageElement);
 						totalImages++;
@@ -151,14 +159,18 @@
 					}
 				});
 
-				console.groupEnd();
-				console.log((((new Date).getTime() - startTime) / 1000).toFixed(3) + ': scanning DOM for image elements DONE');
+				if (settings.debugMode) {
+					console.groupEnd();
+					console.log((((new Date).getTime() - startTime) / 1000).toFixed(3) + ': scanning DOM for image elements DONE');
+				}
 
 				// Get the percentage total of all the images. Once this number is reached
 				// by the preloader the loading is done.
 				if (settings.truePercentage) {
-					console.log((((new Date).getTime() - startTime) / 1000).toFixed(3) + ': getting image sizes...');
-					console.groupCollapsed('image sizes');
+					if (settings.debugMode) {
+						console.log((((new Date).getTime() - startTime) / 1000).toFixed(3) + ': getting image sizes...');
+						console.groupCollapsed('image sizes');
+					}
 
 					// Get the Content-Length attribute as rough estimate of the actual file size.
 					// Use this to get the total file size of all images and calculate percentage relative to it.
@@ -170,7 +182,9 @@
 								element.fileSize = parseInt(object.getResponseHeader('Content-Length'));
 								totalPercentage += element.fileSize;
 
-								console.log((element.fileSize / 1000).toFixed(2) + ' KB \t' + (totalPercentage / 1000).toFixed(2) + ' KB total');
+								if (settings.debugMode) {
+									console.log((element.fileSize / 1000).toFixed(2) + ' KB \t' + (totalPercentage / 1000).toFixed(2) + ' KB total');
+								}
 
 								continueCounting();
 							},
@@ -198,16 +212,20 @@
 							if (count === totalImages) {
 								updateTrickleSpeed();
 
-								console.groupEnd();
-								console.log((((new Date).getTime() - startTime) / 1000).toFixed(3) + ': getting image sizes DONE');
+								if (settings.debugMode) {
+									console.groupEnd();
+									console.log((((new Date).getTime() - startTime) / 1000).toFixed(3) + ': getting image sizes DONE');
+								}
 
 								startPreloading();
 							}
 						}
 					});
 				} else {
-					console.log((((new Date).getTime() - startTime) / 1000).toFixed(3) + ': getting image sizes SKIPPED');
-					
+					if (settings.debugMode) {
+						console.log((((new Date).getTime() - startTime) / 1000).toFixed(3) + ': getting image sizes SKIPPED');
+					}
+
 					// Get number of total images and use that to calculate percentage relative
 					// to number of images loaded.
 					totalPercentage = totalImages;
@@ -222,7 +240,9 @@
 
 					// Check if a current element trickle has already been triggered
 					if (trickleCounters.indexOf(counter) === -1) {
-						console.groupCollapsed('trickle');
+						if (settings.debugMode) {
+							console.groupCollapsed('trickle');
+						}
 
 						// Add element to counter and trickle
 						trickleCounters.push(counter);
@@ -252,16 +272,20 @@
 						trickleTo = elementRelativeSize;
 						trickleSpeed = (elementRelativeSize - previousElementRelativeSize) * 1000; // 1s for each percentage
 
-						console.log('updating progressbar to ' + trickleTo.toFixed(2) + ' at ' + (trickleSpeed / 1000).toFixed(2) + 's');
-						console.groupEnd();
+						if (settings.debugMode) {
+							console.log('updating progressbar to ' + trickleTo.toFixed(2) + ' at ' + (trickleSpeed / 1000).toFixed(2) + 's');
+							console.groupEnd();
+						}
 
 						updateProgressbar(trickleTo, trickleSpeed);
 					}
 				}
 
 				function startPreloading() {
-					console.log((((new Date).getTime() - startTime) / 1000).toFixed(3) + ': preloading image elements...');
-					console.groupCollapsed('intervals');
+					if (settings.debugMode) {
+						console.log((((new Date).getTime() - startTime) / 1000).toFixed(3) + ': preloading image elements...');
+						console.groupCollapsed('intervals');
+					}
 
 					// Get the url of the image or the css background image. Create a DOM image element which
 					// holds the image (preloads it) and triggers a progressbar update on successful load.
@@ -289,7 +313,7 @@
 								}
 							}).error(function() {
 								// Ignore failed image loads but add an error class to the image
-								// and notify user with a console message if in debug mode.
+								// and notify user that something went wrong.
 								updateLoader(currentElement);
 								if (++index < imageElements.length) {
 									loadImage(index);
@@ -302,11 +326,6 @@
 
 				function handleLoadingError(image, element) {
 					element.node.addClass('kyco_preloader_not_found_error');
-
-					if (settings.debugMode) {
-						var errorUrl = image.attr('src') ? image.attr('src') : image.css('background-image');
-						console.log('Failed loading ' + errorUrl);
-					}
 				}
 
 				function updateLoader(element) {
@@ -334,7 +353,7 @@
 				}
 
 				function updateProgressbar(value, updateDuration) {
-					if (updateDuration === undefined) {
+					if (updateDuration === undefined && settings.debugMode) {
 						console.log((((new Date).getTime() - startTime) / 1000).toFixed(3) + ': ' + value.toFixed(2) + '%');
 					}
 
@@ -364,9 +383,11 @@
 							progressNotification.children('span').html(Math.round(value));
 							// Once done loading show all elements and delete preloader DOM elements.
 							if (imagesLoaded === totalImages) {
-								console.groupEnd();
-								console.log((((new Date).getTime() - startTime) / 1000).toFixed(3) + ': preloading image elements DONE');
-								console.groupEnd();
+								if (settings.debugMode) {
+									console.groupEnd();
+									console.log((((new Date).getTime() - startTime) / 1000).toFixed(3) + ': preloading image elements DONE');
+									console.groupEnd();
+								}
 
 								progressLoaded.delay(100).queue(function() {
 									if (settings.showImagesBeforeComplete) {
@@ -452,8 +473,6 @@
 			});
 		}
 	};
-
-	console.log((((new Date).getTime() - startTime) / 1000).toFixed(3) + ': setting default variables and methods DONE');
 
 	// Check if browser supports Array.forEach() method, if it doesn't mimic that functionality,
 	// implementation from here: http://stackoverflow.com/questions/2790001/fixing-javascript-array-functions-in-internet-explorer-indexof-foreach-etc
