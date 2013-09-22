@@ -1,7 +1,7 @@
 /*********************************************\
 
 	jquery.kyco.preloader
-	v1.1.2
+	v1.1.3
 
 	Brought to you by http://www.kyco.co.za
 	Copyright 2013 Cornelius Weidmann
@@ -12,9 +12,8 @@
 
 (function($) {
 	var startTime = (new Date).getTime();
-
 	console.groupCollapsed('kycoPreload (minified version does not show log messages)');
-	console.log((((new Date).getTime() - startTime) / 1000).toFixed(3) + ': setting default variables and methods...');
+	console.log((((new Date).getTime() - startTime) / 1000).toFixed(3) + ': setting default variables and methods...'); 
 
 	var defaults = {
 		preloadSelector: true,
@@ -82,6 +81,7 @@
 				var totalPercentage = 0;
 				var count = 0;
 				var trickleSpeed = 3000; // 3s, only used initially
+				var trickleCounters = []; // used to prevent multiple trickles for the same element 
 
 				console.log((((new Date).getTime() - startTime) / 1000).toFixed(3) + ': creating DOM elements...');
 
@@ -111,9 +111,9 @@
 				console.log((((new Date).getTime() - startTime) / 1000).toFixed(3) + ': creating DOM elements DONE');
 
 				// Start animating progress bar to indicate activity
-				// if (settings.truePercentage) {
-				// 	updateProgressbar(1, trickleSpeed);
-				// }
+				if (settings.truePercentage) {
+					updateProgressbar(1, trickleSpeed);
+				}
 
 				console.log((((new Date).getTime() - startTime) / 1000).toFixed(3) + ': scanning DOM for image elements...');
 				console.groupCollapsed('image elements');
@@ -196,7 +196,8 @@
 						function continueCounting() {
 							count++;
 							if (count === totalImages) {
-								// updateTrickleSpeed();
+								updateTrickleSpeed();
+
 								console.groupEnd();
 								console.log((((new Date).getTime() - startTime) / 1000).toFixed(3) + ': getting image sizes DONE');
 
@@ -206,34 +207,57 @@
 					});
 				} else {
 					console.log((((new Date).getTime() - startTime) / 1000).toFixed(3) + ': getting image sizes SKIPPED');
+					
 					// Get number of total images and use that to calculate percentage relative
 					// to number of images loaded.
 					totalPercentage = totalImages;
+					updateTrickleSpeed();
 					startPreloading();
 				}
 
-				// function updateTrickleSpeed(counter) {
-				// 	// Will overwirte the initial trickle speed with one based on the file size
-				// 	// of the image, does not work if truePercentage is set to false.
-				// 	counter = counter !== undefined ? counter : 0;
+				function updateTrickleSpeed(counter) {
+					// Will overwrite the initial trickle speed with one based on the file size
+					// of the image, does not work if truePercentage is set to false.
+					counter = counter !== undefined ? counter : 0;
 
-				// 	var totalFileSize = 0;
-				// 	var elementRelativeSize = 0;
-				// 	var trickleTo = 0;
+					// Check if a current element trickle has already been triggered
+					if (trickleCounters.indexOf(counter) === -1) {
+						console.groupCollapsed('trickle');
 
-				// 	imageElements.forEach(function(element) {
-				// 		totalFileSize += element.fileSize;
-				// 	});
+						// Add element to counter and trickle
+						trickleCounters.push(counter);
 
-				// 	for (var z = 0; z <= counter; z++) {
-				// 		elementRelativeSize += imageElements[z].fileSize / totalFileSize * 100;
-				// 	}
+						var totalFileSize = 0;
+						var elementRelativeSize = 0;
+						var previousElementRelativeSize = 0;
+						var trickleTo = 0;
 
-				// 	trickleTo = elementRelativeSize;
-				// 	trickleSpeed = elementRelativeSize * 1000; // 1s for each percentage
+						if (settings.truePercentage) {
+							imageElements.forEach(function(element) {
+								totalFileSize += element.fileSize;
+							});
 
-				// 	updateProgressbar(trickleTo, trickleSpeed);
-				// }
+							for (var z = 0; z <= counter; z++) {
+								elementRelativeSize += imageElements[z].fileSize / totalFileSize * 100;
+								if (z === (counter - 1)) {
+									previousElementRelativeSize = elementRelativeSize;
+								}
+							}
+						} else {
+							totalFileSize = totalImages;
+							elementRelativeSize = (counter + 1) / totalFileSize * 100;
+							previousElementRelativeSize = counter / totalFileSize * 100;
+						}
+
+						trickleTo = elementRelativeSize;
+						trickleSpeed = (elementRelativeSize - previousElementRelativeSize) * 1000; // 1s for each percentage
+
+						console.log('updating progressbar to ' + trickleTo.toFixed(2) + ' at ' + (trickleSpeed / 1000).toFixed(2) + 's');
+						console.groupEnd();
+
+						updateProgressbar(trickleTo, trickleSpeed);
+					}
+				}
 
 				function startPreloading() {
 					console.log((((new Date).getTime() - startTime) / 1000).toFixed(3) + ': preloading image elements...');
@@ -287,7 +311,7 @@
 
 				function updateLoader(element) {
 					imagesLoaded++;
-					calculateCurrentLoadPercentage(element);
+					updateProgressPercentage(element);
 					updateProgressbar(progressPercentage);
 					if (settings.progressiveReveal) {
 						revealElement(element.node);
@@ -295,7 +319,7 @@
 					settings.afterEach.call(element.node);
 				}
 
-				function calculateCurrentLoadPercentage(element) {
+				function updateProgressPercentage(element) {
 					if (settings.truePercentage) {
 						progressPercentage += (element.fileSize / totalPercentage) * 100;
 						if (imagesLoaded === totalImages) {
@@ -310,12 +334,16 @@
 				}
 
 				function updateProgressbar(value, updateDuration) {
-					console.log((((new Date).getTime() - startTime) / 1000).toFixed(3) + ': ' + value.toFixed(2) + '%');
+					if (updateDuration === undefined) {
+						console.log((((new Date).getTime() - startTime) / 1000).toFixed(3) + ': ' + value.toFixed(2) + '%');
+					}
 
 					// Animates the progress bar and percentage to reflect the value specified.
 					updateDuration = updateDuration !== undefined ? updateDuration : settings.animateDuration;
-					var totalWidth;
-					progressLoaded.stop().animate({'width': value + '%'}, {
+					var totalWidth = 0;
+					progressLoaded.stop();
+
+					progressLoaded.animate({'width': value + '%'}, {
 						duration: updateDuration,
 						easing: 'linear',
 						step: function() {
@@ -367,8 +395,8 @@
 										});
 									}
 								});
-							} else if (settings.truePercentage) {
-								// updateTrickleSpeed(imagesLoaded + 1);
+							} else if (progressPercentage !== 0) {
+								updateTrickleSpeed(imagesLoaded);
 							}
 						}
 					});
