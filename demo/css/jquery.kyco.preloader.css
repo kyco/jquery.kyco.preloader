@@ -1,0 +1,106 @@
+/*********************************************\
+
+	jquery.kyco.preloader
+	v1.1.3
+
+	Brought to you by http://www.kyco.co.za
+	Copyright 2013 Cornelius Weidmann
+
+	Distributed under the GPL
+
+	Go ahead and make your preloader awesome!
+
+\*********************************************/
+
+#kyco_preloader {
+	/*
+	**	Do not change position unless you know what you are doing.
+	**	The preloader uses this value and also adjusts it when
+	**	setting the showInContainer option to true.
+	*/
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 10;
+	width: 100%;
+	height: 100%;
+}
+
+#kyco_preloader .kyco_loader_overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: #000;
+	opacity: .1;
+}
+
+#kyco_preloader .kyco_loader {
+	position: absolute;
+	top: 40%;
+	left: 25%;
+	width: 50%;
+}
+
+#kyco_preloader .kyco_progress_notification {
+	position: relative;
+	width: 100%;
+	text-align: center;
+}
+
+#kyco_preloader .kyco_progress_percentage {
+	/*
+	**	This rule is only necessary if a global style is applied to all span tags
+	*/
+	position: relative;
+	float: none;
+}
+
+#kyco_preloader .kyco_progress_bar {
+	position: relative;
+	width: 100%;
+	height: 5px;
+	border-bottom: 2px solid #555;
+}
+
+#kyco_preloader .kyco_progress_loaded {
+	position: relative;
+	width: 0;
+	height: 100%;
+	border-bottom: 2px solid #fff;
+}
+
+#kyco_preloader .kyco_progress_notification.error {
+	padding: 10px;
+	background: #fff;
+	box-shadow: 0 0 0 5px #f00;
+}
+
+#kyco_preloader .kyco_progress_bar.error {
+	display: none;
+}
+
+.kyco_preloader_not_found_error {
+	position: relative;
+	background: #fff url(../images/loading_error.png) no-repeat center;
+	box-shadow: inset 0 0 0 1px #aaa;
+}
+
+.kyco_preloader_not_found_error:after {
+	/*
+	**	This pseudo after rule currently only works in Firefox (img tags don't support these yet)
+	*/
+	content: 'Failed loading image.';
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	z-index: 10;
+	width: 90%;
+	padding: 5%;
+	border-top: 1px solid #aaa;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #333;
+	text-align: center;
+}

@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Demo - jquery.kyco.preloader</title>
+	<link rel="stylesheet" href="css/jquery.kyco.preloader.css">
+	<link rel="stylesheet" href="css/jquery.kyco.preloader.demo.css">
+	<script src="js/jquery-1.10.2.min.js"></script>
+	<script src="js/jquery.kyco.preloader.min.js"></script>
+</head>
+<body>
+	<h2>jquery.kyco.preloader</h2>
+	<p>Brought to you by <a href="http://www.kyco.co.za." target="_blank">www.kyco.co.za</a>. Copyright 2013 Cornelius Weidmann. Distributed under the GPL.</p>
+
+	<div class="nav">
+		<p>Examples:</p>
+		<ul>
+			<li><a href="index.html">Home</a></li>
+			<li><a href="default.html">Default</a></li>
+			<li><a href="container.html">Container</a></li>
+			<li><a href="cross-domain.html">Cross-domain</a></li>
+			<li><a href="hide-bg.html">Hide background</a></li>
+			<li><a href="loading-text.html">Loading text</a></li>
+			<li><a href="custom-animation.html">Custom animation</a></li>
+			<li><a href="silent-mode.html">Silent mode</a></li>
+			<li><a href="sequential-load.html">Sequential load</a></li>
+			<li><a href="other-elements.html">Other elements</a></li>
+			<li><a href="using-callbacks.html">Using callbacks</a></li>
+		</ul>
+	</div>
+
+	<div class="header" style="margin-top:0;">
+		<h2>Loading text</h2>
+	</div>
+
+	<div class="demo">
+		<img src="images/01.jpg">
+		<img src="images/02.jpg">
+		<img src="images/03.jpg">
+		<img src="images/04.jpg">
+		<img src="images/05.jpg">
+		<img src="images/06.jpg">
+		<img src="images/07.jpg">
+		<img src="images/08.jpg">
+		<img src="images/09.jpg">
+		<img src="images/10.jpg">
+	</div>
+
+	<div class="description">
+		<small>Clear cache to force loading images again.</small>
+		<p>
+			Custom loader text. Does not show loading percentages.
+		</p>
+	</div>
+
+	<div class="info">
+<small>View console to see more info and loading times.</small>
+<pre>
+$(document).ready(function() {
+    $('.demo').kycoPreload({
+        showInContainer: true,
+        useOpacity: true,
+        progressiveReveal: true,
+        <em>hidePercentage: true,</em>
+        <em>loaderText: 'doing some number crunching and loading of sorts...',</em>
+    });
+});
+</pre>
+	</div>
+
+	<script>
+		$(document).ready(function() {
+			$('.demo').kycoPreload({
+				showInContainer: true,
+				useOpacity: true,
+				progressiveReveal: true,
+				hidePercentage: true,
+				loaderText: 'doing some number crunching and loading of sorts...',
+			});
+		});
+	</script>
+</body>
+</html>
+
+
