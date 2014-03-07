@@ -3,7 +3,7 @@ jquery.kyco.preloader
 
 A jQuery image preloader plugin. This plugin lets you preload your images and CSS backgrounds with ease.
 
-Take a look at the [demo](http://www.kycosoftware.com/projects/demo/image-preloader/).
+Take a look at the [demo](http://www.kycosoftware.com/projects/demo/image-preloader).
 
 How to install
 --------------
