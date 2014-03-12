@@ -66,7 +66,7 @@ your slider images. You can also customise it quite a bit:
 	</script>
 
 
-Configuration - kycoPreload({ <em>options</em> })
+Configuration - kycoPreload({ *options* })
 -------------------------------------------------
 
 	preloadSelector: true,
@@ -161,4 +161,5 @@ be deleted except for the *position* attribute of *#kyco_preloader*.
 Support
 -------
 
-For bugs or improvements please email [info@kycosoftware.com](mailto:info@kycosoftware.com).
+For bugs or improvements please use the [issues tab](https://github.com/kyco/jquery.kyco.preloader/issues)
+or email [support@kycosoftware.com](mailto:support@kycosoftware.com).
