@@ -1,5 +1,6 @@
 jquery.kyco.preloader
 =====================
+####Version: 1.1.5
 
 A jQuery image preloader plugin. This plugin lets you preload your images and CSS backgrounds with ease.
 
@@ -8,9 +9,9 @@ Take a look at the [demo](http://www.kycosoftware.com/projects/demo/image-preloa
 How to install
 --------------
 
-Download the js file and include it in your head after including jquery:
+Download the js file and include it after including jquery:
 
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script src="jquery.kyco.preloader.min.js"></script>
 
 Also include the css file and grab the loading_error.png from the directory:
@@ -79,6 +80,10 @@ as soon as it is loaded and not only once the preloader is done loading.
 *Note: does not work with cross-domain calls*  
 If set to true will get the actual (compressed) file size of all the images instead of just looking
 at the number of images loaded divided by the total number of images.
+
+	disableOverlay: false,
+
+If set to true will not create the blocking overlay.
 
 	showInContainer: false,
 
@@ -154,7 +159,12 @@ Styling
 
 By default this preloader shows a progress bar. If you wish to use a spinner or something else
 just edit the css file to hide the progress bar. I have added a stylesheet so that it is easy to 
-detect which classes are used by the preloader. The preloader is quite flexible, all styles can 
+detect which classes are used by the preloader.
+
+One easy way of styling the preloader is to set the <code>animateDuration: 10000000</code> when initiating
+the preloader in order for the preloader to stay visible.
+
+The preloader is quite flexible, all styles can 
 be deleted except for the *position* attribute of *#kyco_preloader*.
 
 

@@ -3,7 +3,7 @@
 	jquery.kyco.preloader
 	=====================
 
-	Version 1.1.4
+	Version 1.1.5
 
 	Brought to you by
 	http://www.kycosoftware.com
@@ -23,6 +23,8 @@
 		// NOTE: does not work with cross-domain calls
 		// if set to true will get the actual (compressed) file size of all the images instead of
 		// just looking at the number of images loaded divided by the total number of images
+		disableOverlay: false,
+		// if set to true will not create the blocking overlay
 		showInContainer: false,
 		// if set to true will load the preloader inside the selector element instead of
 		// across the whole page
@@ -90,7 +92,11 @@
 					parent.css('position', 'relative');
 					preloadContainer.css('position', 'absolute');
 				}
-				var preloadOverlay = $('<div class="kyco_loader_overlay"></div>').appendTo(preloadContainer);
+				if (!settings.disableOverlay) {
+					var preloadOverlay = $('<div class="kyco_loader_overlay"></div>').appendTo(preloadContainer);
+				} else {
+					preloadContainer.css('height', 'auto');
+				}
 				var preloadLoader = $('<div class="kyco_loader"></div>').appendTo(preloadContainer);
 				if (!settings.hidePercentage) {
 					var progressNotification = $('<div class="kyco_progress_notification">' + settings.loaderText + ' <span class="kyco_progress_percentage">' + progressPercentage + '</span>%</div>').appendTo(preloadLoader);
@@ -169,6 +175,7 @@
 					imageElements.forEach(function(element) {
 						$.ajax({
 							type: 'HEAD',
+							cache: false,
 							url: getImageUrl(element.node),
 							success: function(response, message, object) {
 								element.fileSize = parseInt(object.getResponseHeader('Content-Length'));
@@ -186,7 +193,7 @@
 								progressNotification.addClass('error').html('\
 									Not all of your images were preloaded!<br>\
 									Loader failed getting image sizes.<br><br>\
-									1. Make sure your images exists.<br>\
+									1. Make sure your images exist.<br>\
 									2. Make sure your image paths/urls are correct.<br>\
 									3. If you load images from a romote domain set truePercentage to false.<br><br>\
 									<button>Close</button>\

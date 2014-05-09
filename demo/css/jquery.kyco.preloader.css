@@ -3,7 +3,7 @@
 	jquery.kyco.preloader
 	=====================
 
-	Version 1.1.4
+	Version 1.1.5
 
 	Brought to you by
 	http://www.kycosoftware.com
@@ -26,6 +26,8 @@
 	z-index: 10;
 	width: 100%;
 	height: 100%;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 13px;
 }
 
 #kyco_preloader .kyco_loader_overlay {
@@ -35,18 +37,21 @@
 	width: 100%;
 	height: 100%;
 	background: #000;
-	opacity: .1;
+	opacity: 0.1;
 }
 
 #kyco_preloader .kyco_loader {
 	position: absolute;
-	top: 40%;
-	left: 25%;
-	width: 50%;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 30px;
+	background: rgba(255, 255, 255, 0.5);
 }
 
 #kyco_preloader .kyco_progress_notification {
-	position: relative;
+	position: absolute;
+	bottom: 6px;
 	width: 100%;
 	text-align: center;
 }
@@ -60,21 +65,23 @@
 }
 
 #kyco_preloader .kyco_progress_bar {
-	position: relative;
+	position: absolute;
+	top: 0;
 	width: 100%;
-	height: 5px;
-	border-bottom: 2px solid #555;
+	height: 0;
+	border-bottom: 2px solid #fff;
 }
 
 #kyco_preloader .kyco_progress_loaded {
 	position: relative;
 	width: 0;
 	height: 100%;
-	border-bottom: 2px solid #fff;
+	border-bottom: 2px solid rgba(63, 72, 204, 0.8);
+	box-shadow: 0 0 2px rgba(63, 72, 204, 0.5);
 }
 
 #kyco_preloader .kyco_progress_notification.error {
-	padding: 10px;
+	padding: 10px 0;
 	background: #fff;
 	box-shadow: 0 0 0 5px #f00;
 }
@@ -85,7 +92,7 @@
 
 .kyco_preloader_not_found_error {
 	position: relative;
-	background: #fff url(../images/loading_error.png) no-repeat center; /* Change path to match your setup */
+	background: #fff url(../images/loading_error.png) no-repeat center; /* Change path to match your setup 
 	box-shadow: inset 0 0 0 1px #aaa;
 }
 
