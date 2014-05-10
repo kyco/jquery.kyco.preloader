@@ -1,5 +1,5 @@
-jquery.kyco.preloader
-=====================
+kyco Image Preloader
+====================
 ####Version: 1.1.5
 
 A jQuery image preloader plugin. This plugin lets you preload your images and CSS backgrounds with ease.
