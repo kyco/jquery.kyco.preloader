@@ -2,19 +2,20 @@ kyco Image Preloader
 ====================
 ####Version: 1.1.5
 
-A jQuery image preloader plugin. This plugin lets you preload your images and CSS backgrounds with ease.
+The simplest and most efficient way to preload your images. This plugin lets you
+preload your images and CSS backgrounds with ease.
 
 Take a look at the [demo](http://www.kycosoftware.com/projects/demo/image-preloader).
 
 How to install
 --------------
 
-Download the js file and include it after including jquery:
+Download or clone and include the minified js file after including jquery:
 
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script src="jquery.kyco.preloader.min.js"></script>
 
-Also include the css file and grab the loading_error.png from the directory:
+For default styling include the CSS file and loading-error.png from the src directory:
 
 	<link rel="stylesheet" href="jquery.kyco.preloader.css">
 
@@ -22,12 +23,12 @@ Call the preloader like this:
 
 	<script>
 		$(document).ready(function() {
-			$('body').kycoPreload();
+			$('body').kycoPreload(); // This will preload all images on the page.
 		});
 	</script>
 
-You can also call the preloader on any element of course, e.g. you only want to preload
-your slider images. You can also customise it quite a bit:
+You can call the preloader on any tag of course, e.g. you only want to preload
+your slider images. Below is what a customisation could look like:
 
 	<div id="slider">
 		<ul>
@@ -41,23 +42,14 @@ your slider images. You can also customise it quite a bit:
 			$('#slider').kycoPreload({
 				showInContainer: true,
 				useOpacity: true,
-				animateDuration: 500,
+				forceSequentialLoad: true,
+				animateDuration: 1000,
 				fadeOutDuration: 1500,
 				afterEach: function() {
-					var timestamp = new Date();
-					var hours = timestamp.getHours();
-					var minutes = timestamp.getMinutes();
-					var seconds = timestamp.getSeconds();
-					var milliseconds = timestamp.getMilliseconds();
-					while ((hours + '').length < 2) { hours = '0' + hours; }
-					while ((minutes + '').length < 2) { minutes = '0' + minutes; }
-					while ((seconds + '').length < 2) { seconds = '0' + seconds; }
-					while ((milliseconds + '').length < 3) { milliseconds = '0' + milliseconds; }
-					
-					console.log(hours + ':' + minutes + ':' + seconds + '.' + milliseconds, this);
+					$(this).fadeIn(1000); // $(this) refers to image that was preloaded.
 				},
 				beforeComplete: function() {
-					console.log('images preloaded, fading out the overlay and loader at 1500ms');
+					console.log('images preloaded, fading out the overlay and loader at 1.5s');
 				},
 				onComplete: function() {
 					console.log('cool beans!');
