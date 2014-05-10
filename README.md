@@ -60,7 +60,7 @@ your slider images. Below is what a customisation could look like:
 
 
 Configuration - kycoPreload({ *options* })
--------------------------------------------------
+------------------------------------------
 
 	preloadSelector: true,
 
