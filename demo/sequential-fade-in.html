@@ -76,9 +76,8 @@
 <small><em><code>{debugMode: true}</code></em> for more info in console.</small>
 <pre>
 $(document).ready(function() {
-    $('body').kycoPreload({
+    $('.demo').kycoPreload({
         showInContainer: true,
-        useOpacity: true,
         <em>forceSequentialLoad: true,</em>
         animateDuration: 1000,
         <em>afterEach: function() {</em>
@@ -91,9 +90,8 @@ $(document).ready(function() {
 
 	<script>
 		$(document).ready(function() {
-			$('body').kycoPreload({
+			$('.demo').kycoPreload({
 				showInContainer: true,
-				useOpacity: true,
 				forceSequentialLoad: true,
 				animateDuration: 1000,
 				afterEach: function() {
