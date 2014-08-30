@@ -3,7 +3,7 @@
 	jquery.kyco.preloader
 	=====================
 
-	Version 1.1.5
+	Version 1.2.0
 
 	Brought to you by
 	http://www.kycosoftware.com
@@ -16,11 +16,9 @@
 
 #kyco_preloader {
 	/*
-	**	Do not change position unless you know what you are doing.
-	**	The preloader uses this value and also adjusts it when
-	**	setting the showInContainer option to true.
+	**	The preloader position gets set to
+	**	either "fixed" or "absolute".
 	*/
-	position: fixed;
 	top: 0;
 	left: 0;
 	z-index: 10;
@@ -58,7 +56,8 @@
 
 #kyco_preloader .kyco_progress_percentage {
 	/*
-	**	This rule is only necessary if a global style is applied to all span tags
+	**	This rule is only necessary if a global
+	**	style is applied to all span tags.
 	*/
 	position: relative;
 	float: none;
@@ -95,7 +94,10 @@
 }
 
 .kyco_preloader_not_found_error {
+	/*
+	**	Change image path to match your setup.
+	*/
 	position: relative;
-	background: #fff url(../images/loading-error.png) no-repeat center; /* Change image path to match your setup */ 
+	background: #fff url(loading-error.png) no-repeat center;
 	box-shadow: inset 0 0 0 1px #aaa;
 }

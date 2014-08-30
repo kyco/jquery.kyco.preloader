@@ -138,6 +138,7 @@
 
 				if (!settings.showInContainer) {
 					preloadContainer.appendTo('body');
+					preloadContainer.css('position', 'fixed');
 				} else {
 					preloadContainer.appendTo(parent);
 					parent.css('position', 'relative');
@@ -212,6 +213,7 @@
 						} else {
 							child.css('opacity', '0');
 						}
+
 						nonImageElements.push(child);
 					}
 				});
@@ -342,7 +344,6 @@
 								if (++index < imageElements.length) {
 									loadImage(index);
 								}
-
 								handleLoadingError(img, currentElement);
 							});
 						})(0);

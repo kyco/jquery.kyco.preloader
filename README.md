@@ -1,6 +1,6 @@
 kyco Image Preloader
 ====================
-####Version: 1.1.5
+####Version: 1.2.0
 
 The simplest and most efficient way to preload your images. This plugin lets you
 preload your images and CSS backgrounds with ease.
@@ -10,7 +10,9 @@ Take a look at the [demo](http://www.kycosoftware.com/projects/demo/image-preloa
 How to install
 --------------
 
-Download or clone and include the minified js file after including jquery:
+Bower: `bower install jquery.kyco.preloader -D`
+
+Manual: Download or clone and include the minified js file after including jquery:
 
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script src="jquery.kyco.preloader.min.js"></script>
@@ -121,7 +123,7 @@ If set to true will not show the percentage numbers while loading.
 
 Set the text of the loading message.
 
-	animateDuration: 0,
+	animateDuration: 1000,
 
 Set the duration in milliseconds for each progress animation.
 
