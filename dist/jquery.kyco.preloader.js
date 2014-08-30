@@ -3,7 +3,7 @@
 	jquery.kyco.preloader
 	=====================
 
-	Version 1.1.5
+	Version 1.2.0
 
 	Brought to you by
 	http://www.kycosoftware.com
@@ -16,7 +16,7 @@
 
 (function($) {
 	/*
-	**	Documentation on plugin defaults:
+	**	Defaults:
 	**
 	**	preloadSelector
 	**		If set to true will preload the selector's background image, note
@@ -109,7 +109,7 @@
 		useOpacity               : false,
 		hidePercentage           : false,
 		loaderText               : 'loading images, please wait...',
-		animateDuration          : 0,
+		animateDuration          : 1000,
 		fadeOutDuration          : 100,
 		showImagesBeforeComplete : true,
 		afterEach                : function() {},
@@ -132,7 +132,6 @@
 				var totalPercentage    = 0;
 				var count              = 0;
 				var trickleSpeed       = 3000; // 3s, only used initially
-				var trickleCounters    = []; // used to prevent multiple trickles for the same element
 
 				// Create preloader DOM elements.
 				var preloadContainer = $('<div id="kyco_preloader"></div>');
@@ -256,13 +255,13 @@
 								// Ignore errors, they will be handled later. Show a message to notify.
 								continueCounting();
 
-								var markup;
+								var markup = '';
 
 								markup += 'Not all of your images were preloaded!<br>';
 								markup += 'Loader failed getting image sizes.<br><br>';
 								markup += '1. Make sure your images exist.<br>';
 								markup += '2. Make sure your image paths/urls are correct.<br>';
-								markup += '3. If you load images from a romote domain set truePercentage to false.<br><br>';
+								markup += '3. If you load images from a remote domain set <code>truePercentage: false</code>.<br><br>';
 								markup += '<button>Close</button>';
 
 								progressNotification.addClass('error').html(markup);
@@ -270,7 +269,7 @@
 
 								settings.fadeOutDuration = 500000;
 
-								$('button').click(function() {
+								$('#kyco_preloader button').click(function() {
 									preloadContainer.remove();
 								});
 							}
@@ -280,8 +279,6 @@
 							count++;
 
 							if (count === totalImages) {
-								updateTrickleSpeed();
-
 								if (settings.debugMode) {
 									console.groupEnd();
 									console.log((((new Date).getTime() - startTime) / 1000).toFixed(3) + ': getting image sizes DONE');
@@ -301,69 +298,7 @@
 					**	relative to number of images loaded.
 					*/
 					totalPercentage = totalImages;
-					updateTrickleSpeed();
 					startPreloading();
-				}
-
-				function updateTrickleSpeed(counter) {
-					/*
-					**	Will overwrite the initial trickle speed with one based on the
-					**	file size of the image, does not work if truePercentage is set
-					**	to false.
-					*/
-					counter = counter !== undefined ? counter : 0;
-
-					// Check if a current element trickle has already been triggered
-					if (trickleCounters.indexOf(counter) === -1) {
-						if (settings.debugMode) {
-							console.groupCollapsed('trickle');
-						}
-
-						// Add element to counter and trickle
-						trickleCounters.push(counter);
-
-						var totalFileSize               = 0;
-						var elementRelativeSize         = 0;
-						var previousElementRelativeSize = 0;
-						var trickleTo                   = 0;
-
-						if (settings.truePercentage) {
-							imageElements.forEach(function(element) {
-								totalFileSize += element.fileSize;
-							});
-
-							for (var z = 0; z <= counter; z++) {
-								elementRelativeSize += imageElements[z].fileSize / totalFileSize * 100;
-
-								if (z === (counter - 1)) {
-									previousElementRelativeSize = elementRelativeSize;
-								}
-							}
-						} else {
-							totalFileSize               = totalImages;
-							elementRelativeSize         = (counter + 1) / totalFileSize * 100;
-							previousElementRelativeSize = counter / totalFileSize * 100;
-						}
-
-						trickleTo    = elementRelativeSize;
-						trickleSpeed = (elementRelativeSize - previousElementRelativeSize) * 1000; // 1s for each percentage
-
-						if (settings.debugMode) {
-							console.log('updating progressbar to ' + trickleTo.toFixed(2) + ' at ' + (trickleSpeed / 1000).toFixed(2) + 's');
-							console.groupEnd();
-						}
-
-						/*
-						**	Ensure that we do not trickle to 100%, we need the loader to get
-						**	there first, otherwise we might have to wait at 100% which is not
-						**	an ideal user experience.
-						*/
-						if (trickleTo === 100) {
-							trickleTo = 99;
-						}
-
-						updateProgressbar(trickleTo, trickleSpeed);
-					}
 				}
 
 				function startPreloading() {
@@ -379,7 +314,7 @@
 					**	with background images only once all images have been preloaded.
 					*/
 					if (!settings.forceSequentialLoad) {
-						imageElements.forEach(function(element) {
+						imageElements.forEach(function(element, index) {
 							var img = $('<img>').attr('src', getImageUrl(element.node));
 
 							img.load(function() {
@@ -401,15 +336,13 @@
 									loadImage(index);
 								}
 							}).error(function() {
-								/*
-								**	Ignore failed image loads but add an error class to
-								**	the image and notify user that something went wrong.
-								*/
+								// Ignore failed image loads but add an error class to the image.
 								updateLoader(currentElement);
 
 								if (++index < imageElements.length) {
 									loadImage(index);
 								}
+
 								handleLoadingError(img, currentElement);
 							});
 						})(0);
@@ -423,7 +356,7 @@
 				function updateLoader(element) {
 					imagesLoaded++;
 					updateProgressPercentage(element);
-					updateProgressbar(progressPercentage);
+					updateProgressbar(progressPercentage, undefined, element);
 
 					if (settings.progressiveReveal) {
 						revealElement(element.node);
@@ -450,7 +383,7 @@
 					}
 				}
 
-				function updateProgressbar(value, updateDuration) {
+				function updateProgressbar(value, updateDuration, element) {
 					if (updateDuration === undefined && settings.debugMode) {
 						console.log((((new Date).getTime() - startTime) / 1000).toFixed(3) + ': ' + value.toFixed(2) + '%');
 					}
@@ -458,6 +391,16 @@
 					// Animates the progress bar and percentage to reflect the value specified.
 					updateDuration = updateDuration !== undefined ? updateDuration : settings.animateDuration;
 					var totalWidth = 0;
+
+					if (settings.truePercentage) {
+						if (element !== undefined) {
+							updateDuration = Math.round(element.fileSize / 100);
+						}
+
+						if (value === 100) {
+							updateDuration = settings.animateDuration;
+						}
+					}
 
 					progressLoaded.stop();
 
@@ -528,8 +471,6 @@
 										});
 									}
 								});
-							} else if (progressPercentage !== 0) {
-								updateTrickleSpeed(imagesLoaded);
 							}
 						}
 					});
