@@ -1,6 +1,6 @@
 kyco Image Preloader
 ====================
-####Version: 1.2.1
+####Version: 1.2.2
 
 The simplest and most efficient way to preload your images. This plugin lets you
 preload your images and CSS backgrounds with ease.

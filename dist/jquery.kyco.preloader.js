@@ -3,7 +3,7 @@
 	jquery.kyco.preloader
 	=====================
 
-	Version 1.2.1
+	Version 1.2.2
 
 	Brought to you by
 	http://www.kycosoftware.com
@@ -131,7 +131,7 @@
 				var progressPercentage = 0;
 				var totalPercentage    = 0;
 				var count              = 0;
-				var trickleSpeed       = 3000; // 3s, only used initially
+				var minUpdateToValue   = 0; // prevents preloader from jumping backwards
 
 				// Create preloader DOM elements.
 				var preloadContainer = $('<div id="kyco_preloader"></div>');
@@ -168,7 +168,7 @@
 
 				// Start animating progress bar to indicate activity
 				if (settings.truePercentage) {
-					updateProgressbar(1, trickleSpeed);
+					updateProgressbar(1, 3000); // 3s initial trickle
 				}
 
 				if (settings.debugMode) {
@@ -385,80 +385,95 @@
 				}
 
 				function updateProgressbar(value, updateDuration, element) {
+					// Animates the progress bar and percentage to reflect the value specified.
+					updateDuration = updateDuration !== undefined ? updateDuration : settings.animateDuration;
+					var totalWidth = 0;
+					var updateTo   = value;
+					var remaining  = 0;
+
 					if (updateDuration === undefined && settings.debugMode) {
 						console.log((((new Date).getTime() - startTime) / 1000).toFixed(3) + ': ' + value.toFixed(2) + '%');
 					}
 
-					// Animates the progress bar and percentage to reflect the value specified.
-					updateDuration = updateDuration !== undefined ? updateDuration : settings.animateDuration;
-					var totalWidth = 0;
-
-					if (settings.truePercentage) {
+					/*
+					**	Here we actually set the loader to load less than the actual value.
+					**	We do this so we can creep up do the actual value and prevent the
+					**	loader from ever reaching the value. This will give the impression
+					**	that the loader is constantly loading and not getting stuck as
+					**	often on a random number while waiting for the next animation.
+					*/
+					if (value < 100) {
 						if (element !== undefined) {
-							updateDuration = Math.round(element.fileSize / 100);
-						}
+							if (element.round === undefined) {
+								element.round = 0;
 
-						if (value === 100) {
-							updateDuration = settings.animateDuration;
+								updateTo  = value / 4 * 3;
+								remaining = value / 4;
+							} else {
+								element.round++;
+
+								updateTo       = value / (4 + element.round) * (3 + element.round);
+								remaining      = value / (4 + element.round);
+								updateDuration = 200;
+							}
 						}
+					}
+
+					if (element === undefined) {
+						element = {};
+					}
+
+					if (element.round === undefined) {
+						element.round = 0;
+					}
+
+					if (updateTo > minUpdateToValue) {
+						minUpdateToValue = updateTo;
+					}
+
+					if (updateTo < minUpdateToValue) {
+						updateTo = minUpdateToValue;
 					}
 
 					progressLoaded.stop();
 
-					progressLoaded.animate({'width': value + '%'}, {
-						duration: updateDuration,
-						easing: 'linear',
-						step: function() {
-							/*
-							**	Update totalWidth on each step rather than at top of function
-							**	to ensure that the loading percentage is correct for the odd
-							**	case when the browser window gets resized during loading.
-							*/
-							totalWidth = progressBar.width();
+					if (element.round < 30) {
+						progressLoaded.animate({'width': updateTo + '%'}, {
+							duration: updateDuration,
+							easing: 'linear',
+							step: function() {
+								/*
+								**	Update totalWidth on each step rather than at top of function
+								**	to ensure that the loading percentage is correct for the odd
+								**	case when the browser window gets resized during loading.
+								*/
+								totalWidth = progressBar.width();
 
-							// Set the progress percentage text to the currently animated width.
-							progressNotification.children('span').html(Math.round((progressLoaded.width() / totalWidth) * 100));
-						},
-						complete: function() {
-							/*
-							**	The "step" function does not always trigger after the animation
-							**	is done, that is why we make sure to always set the value here.
-							**	E.g. we animate width to 100%, but at 99% the "step" function
-							**	might trigger for the last time, which would cause an unwanted
-							**	result. Also, the lower the animation speed is the less accurate
-							**	the "step" gets, leading to scenarios where the progress bar's
-							**	width could be 100% while the text reads something like 87%.
-							*/
-							progressNotification.children('span').html(Math.round(value));
+								// Set the progress percentage text to the currently animated width.
+								progressNotification.children('span').html(Math.round((progressLoaded.width() / totalWidth) * 100));
+							},
+							complete: function() {
+								/*
+								**	The "step" function does not always trigger after the animation
+								**	is done, that is why we make sure to always set the value here.
+								**	E.g. we animate width to 100%, but at 99% the "step" function
+								**	might trigger for the last time, which would cause an unwanted
+								**	result. Also, the lower the animation speed is the less accurate
+								**	the "step" gets, leading to scenarios where the progress bar's
+								**	width could be 100% while the text reads something like 87%.
+								*/
+								progressNotification.children('span').html(Math.round(updateTo));
 
-							// Once done loading show all elements and delete preloader DOM elements.
-							if (imagesLoaded === totalImages) {
-								if (settings.debugMode) {
-									console.groupEnd();
-									console.log((((new Date).getTime() - startTime) / 1000).toFixed(3) + ': preloading image elements DONE');
-									console.groupEnd();
-								}
+								// Once done loading show all elements and delete preloader DOM elements.
+								if (imagesLoaded === totalImages) {
+									if (settings.debugMode) {
+										console.groupEnd();
+										console.log((((new Date).getTime() - startTime) / 1000).toFixed(3) + ': preloading image elements DONE');
+										console.groupEnd();
+									}
 
-								progressLoaded.delay(100).queue(function() {
-									if (settings.showImagesBeforeComplete) {
-										imageElements.forEach(function(element) {
-											revealElement(element.node);
-										});
-
-										nonImageElements.forEach(function(element) {
-											revealElement(element);
-										});
-
-										settings.beforeComplete.call(this);
-
-										preloadContainer.animate({'opacity':'0'}, settings.fadeOutDuration, function() {
-											preloadContainer.remove();
-											settings.onComplete.call(this);
-										});
-									} else {
-										settings.beforeComplete.call(this);
-
-										preloadContainer.animate({'opacity':'0'}, settings.fadeOutDuration, function() {
+									progressLoaded.delay(100).queue(function() {
+										if (settings.showImagesBeforeComplete) {
 											imageElements.forEach(function(element) {
 												revealElement(element.node);
 											});
@@ -467,14 +482,39 @@
 												revealElement(element);
 											});
 
-											preloadContainer.remove();
-											settings.onComplete.call(this);
-										});
-									}
-								});
+											settings.beforeComplete.call(this);
+
+											preloadContainer.animate({'opacity':'0'}, settings.fadeOutDuration, function() {
+												preloadContainer.remove();
+												settings.onComplete.call(this);
+											});
+										} else {
+											settings.beforeComplete.call(this);
+
+											preloadContainer.animate({'opacity':'0'}, settings.fadeOutDuration, function() {
+												imageElements.forEach(function(element) {
+													revealElement(element.node);
+												});
+
+												nonImageElements.forEach(function(element) {
+													revealElement(element);
+												});
+
+												preloadContainer.remove();
+												settings.onComplete.call(this);
+											});
+										}
+									});
+								} else {
+									/*
+									**	Continue animating. We do this to try and prevent the 
+									**	loader from getting stuck on a random number.
+									*/
+									updateProgressbar(value, updateDuration, element);
+								}
 							}
-						}
-					});
+						});
+					}
 				}
 
 				function getAllChildren(selector) {
