@@ -5,7 +5,7 @@ kyco Image Preloader
 The simplest and most efficient way to preload your images. This plugin lets you
 preload your images and CSS backgrounds with ease.
 
-Take a look at the [demo](https://www.kycosoftware.com/projects/image-preloader/demo).
+Take a look at the [demo](https://www.kycosoftware.com/code/image-preloader/demo).
 The demo files are in the `gh-pages` branch.
 
 How to install
