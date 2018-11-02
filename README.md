@@ -1,24 +1,22 @@
-kyco Image Preloader
-====================
-####Version: 1.2.2
+Image Preloader
+===============
+#### Version: 1.2.2
 
-The simplest and most efficient way to preload your images. This plugin lets you
-preload your images and CSS backgrounds with ease.
+The simplest and most efficient way to preload your images. This plugin lets you preload your images and CSS backgrounds with ease.
 
-Take a look at the [demo](https://www.kycosoftware.com/code/image-preloader/demo).
-The demo files are in the `gh-pages` branch.
+[Demo](https://kyco.github.io/jquery.kyco.preloader)
 
 How to install
 --------------
 
-Bower: `bower install jquery.kyco.preloader --save-dev`
+    Download or clone the repo
 
-Manual: Download or clone and include the minified js file after including jquery:
+Include the minified JS file after including jQuery:
 
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="jquery.kyco.preloader.min.js"></script>
 
-For default styling include the CSS file and loading-error.png from the src directory:
+For default styling include the CSS file and `loading-error.png`:
 
     <link rel="stylesheet" href="jquery.kyco.preloader.css">
 
@@ -30,8 +28,7 @@ Call the preloader like this:
       });
     </script>
 
-You can call the preloader on any tag of course, e.g. you only want to preload
-your slider images. Below is what a customisation could look like:
+You can call the preloader on any tag of course, e.g. you only want to preload your slider images. Below is what a customisation could look like:
 
     <div id="slider">
       <ul>
@@ -72,7 +69,7 @@ as soon as it is loaded and not only once the preloader is done loading.
 
     truePercentage: true,
 
-*Note: does not work with cross-domain calls*  
+*Note: does not work with cross-domain calls*
 If set to true will get the actual (compressed) file size of all the images instead of just looking
 at the number of images loaded divided by the total number of images.
 
@@ -86,7 +83,7 @@ If set to true will load the preloader inside the selector element instead of ac
 
     hideBackground: false,
 
-*Note: hideBackground is an option for when showInContainer is set to true*  
+*Note: hideBackground is an option for when showInContainer is set to true*
 If set to true will hide the css background-image of the selector element.
 
     hideNonImageElements: false,
@@ -96,7 +93,7 @@ If set to true will hide all elements of the selector, not only the images.
     progressiveReveal: false,
 
 *Note: if hideNonImageElements is set to true then progessiveReveal might not return
-the expected result because the image element's parent might be hidden*  
+the expected result because the image element's parent might be hidden*
 If set to true will show images as soon as they are preloaded.
 
     forceSequentialLoad: false,
@@ -152,19 +149,14 @@ Called once after all images have been loaded and all preloader animations have 
 Styling
 -------
 
-By default this preloader shows a progress bar. If you wish to use a spinner or something else
-just edit the css file to hide the progress bar. I have added a stylesheet so that it is easy to
-detect which classes are used by the preloader.
+By default this preloader shows a progress bar. If you wish to use a spinner or something else just edit the css file to hide the progress bar. I have added a stylesheet so that it is easy to detect which classes are used by the preloader.
 
-One easy way of styling the preloader is to set the <code>animateDuration: 10000000</code> when initiating
-the preloader in order for the preloader to stay visible.
+One easy way of styling the preloader is to set the `animateDuration: 10000000` when initiating the preloader in order for the preloader to stay visible.
 
-The preloader is quite flexible, all styles can
-be deleted except for the *position* attribute of *#kyco_preloader*.
+The preloader is quite flexible, all styles can be deleted except for the *position* attribute of *#kyco_preloader*.
 
 
 Support
 -------
 
-For bugs or improvements please use the [issues tab](https://github.com/kyco/jquery.kyco.preloader/issues)
-or email [support@kycosoftware.com](mailto:support@kycosoftware.com).
+For bugs or improvements please use the [issues tab](https://github.com/kyco/jquery.kyco.preloader/issues) or email [support@kyco.io](mailto:support@kyco.io).
