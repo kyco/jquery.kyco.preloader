@@ -62,88 +62,27 @@ You can call the preloader on any tag of course, e.g. you only want to preload y
 Configuration - kycoPreload({ *options* })
 ------------------------------------------
 
-    preloadSelector: true,
-
-If set to true will preload the selector's background image, note that the image will show
-as soon as it is loaded and not only once the preloader is done loading.
-
-    truePercentage: true,
-
-*Note: does not work with cross-domain calls*
-If set to true will get the actual (compressed) file size of all the images instead of just looking
-at the number of images loaded divided by the total number of images.
-
-    disableOverlay: false,
-
-If set to true will not create the blocking overlay.
-
-    showInContainer: false,
-
-If set to true will load the preloader inside the selector element instead of across the whole page.
-
-    hideBackground: false,
-
-*Note: hideBackground is an option for when showInContainer is set to true*
-If set to true will hide the css background-image of the selector element.
-
-    hideNonImageElements: false,
-
-If set to true will hide all elements of the selector, not only the images.
-
-    progressiveReveal: false,
-
-*Note: if hideNonImageElements is set to true then progessiveReveal might not return
-the expected result because the image element's parent might be hidden*
-If set to true will show images as soon as they are preloaded.
-
-    forceSequentialLoad: false,
-
-Will force images to load in the order they appear in the DOM, this can potentially
-increase the load time because images won't start loading in parallel.
-
-    silentMode: false,
-
-If set to true will hide the preloader.
-
-    debugMode: false,
-
-If set to true will show errors.
-
-    useOpacity: false,
-
-If set to true will use opacity property to hide elements instead of display property.
-
-    hidePercentage: false,
-
-If set to true will not show the percentage numbers while loading.
-
-    loaderText: 'loading images, please wait...',
-
-Set the text of the loading message.
-
-    animateDuration: 1000,
-
-Set the duration in milliseconds for each progress animation.
-
-    fadeOutDuration: 100,
-
-Set the duration in milliseconds for the preloader fadeout animation.
-
-    showImagesBeforeComplete: true,
-
-If set to false will wait for the animation of the preloader fadeout to complete before showing the images.
-
-    afterEach: function() {},
-
-Called once after every image load.
-
-    beforeComplete: function() {},
-
-Called once after all images have been loaded and before the fadeout animation of the preloader triggers.
-
-    onComplete: function() {}
-
-Called once after all images have been loaded and all preloader animations have completed.
+Option | Description | Example
+-------|-------------|--------
+`preloadSelector` | If set to true will preload the selector's background image, note that the image will show as soon as it is loaded and not only once the preloader is done loading. | `true`
+`truePercentage` | If set to true will get the actual (compressed) file size of all the images instead of just looking at the number of images loaded divided by the total number of images. (*Note: does not work with cross-domain calls*) | `true`
+`disableOverlay` | If set to true will not create the blocking overlay. | `false`
+`showInContainer` | If set to true will load the preloader inside the selector element instead of across the whole page. | `false`
+`hideBackground` | If set to true will hide the css background-image of the selector element. (*Note: hideBackground is an option for when showInContainer is set to true*) | `false`
+`hideNonImageElements` | If set to true will hide all elements of the selector, not only the images. | `false`
+`progressiveReveal` | If set to true will show images as soon as they are preloaded. (*Note: if hideNonImageElements is set to true then progessiveReveal might not return the expected result because the image element's parent might be hidden*) | `false`
+`forceSequentialLoad` | Will force images to load in the order they appear in the DOM, this can potentially increase the load time because images won't start loading in parallel. | `false`
+`silentMode` | If set to true will hide the preloader. | `false`
+`debugMode` | If set to true will show errors. | `false`
+`useOpacity` | If set to true will use opacity property to hide elements instead of display property. | `false`
+`hidePercentage` | If set to true will not show the percentage numbers while loading. | `false`
+`loaderText` | Set the text of the loading message. | `'Loading images, please wait...'`
+`animateDuration` | Set the duration in milliseconds for each progress animation. | `1000`
+`fadeOutDuration` | Set the duration in milliseconds for the preloader fadeout animation. | `100`
+`showImagesBeforeComplete` | If set to false will wait for the animation of the preloader fadeout to complete before showing the images. | `true`
+`afterEach` | Called once after every image load. | `function() {}`
+`beforeComplete` | Called once after all images have been loaded and before the fadeout animation of the preloader triggers. | `function() {}`
+`onComplete` | Called once after all images have been loaded and all preloader animations have completed. | `function() {}`
 
 
 Styling
