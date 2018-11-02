@@ -92,7 +92,7 @@ By default this preloader shows a progress bar. If you wish to use a spinner or 
 
 One easy way of styling the preloader is to set the `animateDuration: 10000000` when initiating the preloader in order for the preloader to stay visible.
 
-The preloader is quite flexible, all styles can be deleted except for the *position* attribute of *#kyco_preloader*.
+The preloader is quite flexible, all styles can be deleted except for the `position` attribute of `#kyco_preloader`.
 
 
 Support
