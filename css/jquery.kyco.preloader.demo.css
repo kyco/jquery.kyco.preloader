@@ -2,6 +2,11 @@
 **	Custom styling for Demo.
 */
 
+h2,
+h2 + p {
+	font-family: monospace;
+}
+
 .clear {
 	clear: both;
 }
@@ -49,7 +54,7 @@
 h2 {
 	margin: 0;
 	padding: 0 10px;
-	font-size: 18px;	
+	font-size: 18px;
 }
 
 p {
