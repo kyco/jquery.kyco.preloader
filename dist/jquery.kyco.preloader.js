@@ -1,18 +1,14 @@
-/***************************************\
-
-	jquery.kyco.preloader
-	=====================
-
-	Version 1.2.2
-
-	Brought to you by
-	http://www.kycosoftware.com
-
-	Copyright 2014 Cornelius Weidmann
-
-	Distributed under the GPL
-
-\***************************************/
+/*
+**
+**  jquery.kyco.preloader
+**  =====================
+**
+**  Version 1.2.2
+**
+**  Brought to you by
+**  https://kyco.io
+**
+*/
 
 (function($) {
 	/*
@@ -507,7 +503,7 @@
 									});
 								} else {
 									/*
-									**	Continue animating. We do this to try and prevent the 
+									**	Continue animating. We do this to try and prevent the
 									**	loader from getting stuck on a random number.
 									*/
 									updateProgressbar(value, updateDuration, element);
