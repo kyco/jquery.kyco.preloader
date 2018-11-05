@@ -3,7 +3,7 @@
 **  jquery.kyco.preloader
 **  =====================
 **
-**  Version 1.2.2
+**  Version 1.2.3
 **
 **  Brought to you by
 **  https://kyco.io
