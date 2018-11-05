@@ -3,7 +3,7 @@
 **  jquery.kyco.preloader
 **  =====================
 **
-**  Version 1.2.2
+**  Version 1.2.3
 **
 **  Brought to you by
 **  https://kyco.io
@@ -315,9 +315,10 @@
 						imageElements.forEach(function(element, index) {
 							var img = $('<img>').attr('src', getImageUrl(element.node));
 
-							img.load(function() {
+							img.on('load', function() {
 								updateLoader(element);
-							}).error(function() {
+							});
+							img.on('error', function() {
 								updateLoader(element);
 								handleLoadingError(img, element);
 							});
@@ -327,13 +328,14 @@
 							var currentElement = imageElements[index];
 							var img            = $('<img>').attr('src', getImageUrl(currentElement.node));
 
-							img.load(function() {
+							img.on('load', function() {
 								updateLoader(currentElement);
 
 								if (++index < imageElements.length) {
 									loadImage(index);
 								}
-							}).error(function() {
+							});
+							img.on('error', function() {
 								// Ignore failed image loads but add an error class to the image.
 								updateLoader(currentElement);
 
