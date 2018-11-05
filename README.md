@@ -1,6 +1,6 @@
 Image Preloader
 ===============
-#### Version: 1.2.2
+#### Version: 1.2.3
 
 The simplest and most efficient way to preload your images. This plugin lets you preload your images and CSS backgrounds with ease.
 
@@ -11,7 +11,7 @@ How to install
 
     Download or clone the repo
 
-Include the minified JS file after including jQuery:
+Include the minified JS file after including jQuery (works with jQuery 1, 2 & 3):
 
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="jquery.kyco.preloader.min.js"></script>
